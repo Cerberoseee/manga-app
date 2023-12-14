@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.mangaapp_finalproject.api.ApiService;
 import com.example.mangaapp_finalproject.api.type.Statistic.Statistic;
+import com.example.mangaapp_finalproject.api.type.Statistic.StatisticResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,22 +34,22 @@ public class MainActivity extends AppCompatActivity {
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<Statistic> call = apiService.getStatistic("43848429-00b1-4215-bb0c-31973fe705cf");
+        Call<StatisticResponse> call = apiService.getStatistic("43848429-00b1-4215-bb0c-31973fe705cf");
 
-        call.enqueue(new Callback<Statistic>() {
+        call.enqueue(new Callback<StatisticResponse>() {
             @Override
-            public void onResponse(Call<Statistic> call, Response<Statistic> response) {
+            public void onResponse(Call<StatisticResponse> call, Response<StatisticResponse> response) {
                 if (response.code() == 404) {
                     Toast.makeText(MainActivity.this, "Not found", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Statistic stat = response.body();
+                StatisticResponse stat = response.body();
                 String statDetail = stat.statistics.get("43848429-00b1-4215-bb0c-31973fe705cf").follows.toString();
                 Log.i("res", statDetail);
             }
 
             @Override
-            public void onFailure(Call<Statistic> call, Throwable t) {
+            public void onFailure(Call<StatisticResponse> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Unable to connect to network", Toast.LENGTH_SHORT).show();
                 Log.i("err", t.toString());
 
