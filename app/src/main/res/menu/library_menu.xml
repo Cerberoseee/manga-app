@@ -5,8 +5,8 @@
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@drawable/ic_search_bar"
-        android:title="Item"
+        android:icon="@drawable/ic_search_action"
+        android:title="Search"
         app:showAsAction="ifRoom" />
     <item
         android:layout_width="wrap_content"

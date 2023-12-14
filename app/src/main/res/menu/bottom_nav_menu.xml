@@ -6,17 +6,17 @@
     <item
         android:id="@+id/libraryItem"
         android:icon="@drawable/ic_library_nav"
-        android:title="library" />
+        android:title="Library" />
     <item
         android:id="@+id/browseItem"
-        android:icon="@drawable/ic_browse_nav"
-        android:title="browse" />
+        android:icon="@drawable/ic_browser_nav"
+        android:title="Browse" />
     <item
         android:id="@+id/historyItem"
         android:icon="@drawable/ic_history_nav"
-        android:title="history" />
+        android:title="History" />
     <item
         android:id="@+id/moreItem"
         android:icon="@drawable/ic_more_nav"
-        android:title="more" />
+        android:title="More" />
 </menu>

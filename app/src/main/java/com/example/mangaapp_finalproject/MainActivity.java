@@ -1,14 +1,19 @@
 package com.example.mangaapp_finalproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.Toast;
 
 import com.example.mangaapp_finalproject.api.ApiService;
-import com.example.mangaapp_finalproject.api.type.Statistic.Statistic;
 import com.example.mangaapp_finalproject.api.type.Statistic.StatisticResponse;
+import com.example.mangaapp_finalproject.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,12 +23,52 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private static final String BASE_URL="https://api.mangadex.org/";
+    ActivityMainBinding binding;
+    BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        bottomNavigationView.setItemBackgroundResource(R.drawable.bottom_nav_bar_item_bg);
+        Menu menu = bottomNavigationView.getMenu();
+
+        changeFragment(new LibraryFragment());
+
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            menu.findItem(R.id.libraryItem).setIcon(R.drawable.ic_library_nav);
+            menu.findItem(R.id.browseItem).setIcon(R.drawable.ic_browser_nav);
+
+            if(item.getItemId() == R.id.libraryItem){
+                item.setIcon(R.drawable.ic_library_nav_selected);
+                changeFragment(new LibraryFragment());
+
+            } else if (item.getItemId() == R.id.browseItem) {
+                item.setIcon(R.drawable.ic_browse_nav_selected);
+                changeFragment(new BrowseFragment());
+
+            } else if (item.getItemId() == R.id.historyItem) {
+                changeFragment(new HistoryFragment());
+
+            } else if (item.getItemId() == R.id.moreItem) {
+                changeFragment(new MoreFragment());
+
+            }
+
+            return true;
+        });
 
         callApi();
+    }
+
+    private void changeFragment(Fragment fragment){
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.flMain,fragment);
+        fragmentTransaction.commit();
     }
 
     void callApi() {
