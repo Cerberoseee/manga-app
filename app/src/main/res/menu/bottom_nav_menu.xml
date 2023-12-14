@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/libraryItem"
+        android:icon="@drawable/ic_library_nav"
+        android:title="library" />
+    <item
+        android:id="@+id/browseItem"
+        android:icon="@drawable/ic_browse_nav"
+        android:title="browse" />
+    <item
+        android:id="@+id/historyItem"
+        android:icon="@drawable/ic_history_nav"
+        android:title="history" />
+    <item
+        android:id="@+id/moreItem"
+        android:icon="@drawable/ic_more_nav"
+        android:title="more" />
+</menu>
