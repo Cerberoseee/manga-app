@@ -26,15 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="@+id/fragment"
-        app:layout_constraintStart_toStartOf="@+id/fragment"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <fragment
-        android:id="@+id/fragment"
-        android:layout_width="411dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="356dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
