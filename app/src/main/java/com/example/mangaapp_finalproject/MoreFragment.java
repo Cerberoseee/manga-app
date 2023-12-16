@@ -1,12 +1,15 @@
 package com.example.mangaapp_finalproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +26,9 @@ public class MoreFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    LinearLayout layoutSettings, layoutAbout;
+    androidx.appcompat.widget.Toolbar toolbarMain;
 
     public MoreFragment() {
         // Required empty public constructor
@@ -59,6 +65,35 @@ public class MoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_more, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_more, container, false);
+
+        layoutSettings = view.findViewById(R.id.layoutSettings);
+        layoutAbout = view.findViewById(R.id.layoutAbout);
+
+        toolbarMain = getActivity().findViewById(R.id.toolbarMain);
+        toolbarMain.setVisibility(View.INVISIBLE);
+
+        layoutSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return view;
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("");
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().invalidateOptionsMenu();
+//    }
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().;
+//    }
 }

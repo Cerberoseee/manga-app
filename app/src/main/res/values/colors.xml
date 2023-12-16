@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#212121</color>
-    <color name="secondary">#3D3D3D</color>
-    <color name="item">#FFFFFF</color>
+    <color name="dark_primary">#212121</color>
+    <color name="light_primary">#FFFFFF</color>
+    <color name="dark_secondary">#3D3D3D</color>
+    <color name="light_secondary">#E8E8E8</color>
+    <color name="light">#FFFFFF</color>
+    <color name="dark">#505050</color>
     <color name="main_blue">#45AEFF</color>
-    <color name="divider">#3C3C3C</color>
+    <color name="dark_divider">#3C3C3C</color>
+    <color name="light_divider">#B1B1B1</color>
     <color name="hint">#7E7E7E</color>
 </resources>

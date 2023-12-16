@@ -5,23 +5,23 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="?attr/colorPrimary"
     tools:context=".MainActivity"
     tools:menu="@menu/bottom_nav_menu">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbarMain"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/secondary"
+        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/library_menu"
-        app:title="Manga App"
-        app:titleTextColor="@color/item" />
+        app:menu="@menu/toolbar_menu"
+        app:title="@string/Library" />
 
     <FrameLayout
         android:id="@+id/flMain"
@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbarMain">
 
     </FrameLayout>
 
@@ -38,9 +38,9 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:background="@color/secondary"
-        app:itemIconTint="@color/item"
-        app:itemTextColor="@color/item"
+        android:background="?attr/colorSecondary"
+        app:itemIconTint="?android:attr/textColorPrimary"
+        app:itemTextColor="?android:attr/textColorPrimary"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
