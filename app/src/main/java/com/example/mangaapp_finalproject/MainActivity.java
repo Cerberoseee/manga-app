@@ -4,11 +4,14 @@ import static android.view.View.GONE;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     BottomNavigationView bottomNavigationView;
     androidx.appcompat.widget.Toolbar toolbarMain;
+
+    SharedPreferences darkModeSharePref;
+    int darkMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +55,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbarMain);
 
         changeFragment(new LibraryFragment());
+
+        darkModeSharePref = getSharedPreferences("DARK_MODE", Context.MODE_PRIVATE);
+        darkMode = darkModeSharePref.getInt("darkMode", 2);
+
+        if(darkMode == 1){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else if(darkMode == 2){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        } else if (darkMode == 0) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             menu.findItem(R.id.libraryItem).setIcon(R.drawable.ic_library_nav);
