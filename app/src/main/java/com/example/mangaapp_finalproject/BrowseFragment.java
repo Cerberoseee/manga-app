@@ -24,6 +24,8 @@ public class BrowseFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
+    androidx.appcompat.widget.Toolbar toolbarMain;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -54,6 +56,9 @@ public class BrowseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_browse_list, container, false);
+
+        toolbarMain = getActivity().findViewById(R.id.toolbarMain);
+        toolbarMain.setVisibility(View.VISIBLE);
 
         // Set the adapter
         if (view instanceof RecyclerView) {

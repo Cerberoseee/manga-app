@@ -1,13 +1,24 @@
 package com.example.mangaapp_finalproject;
 
+import static android.view.View.GONE;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.mangaapp_finalproject.api.ApiService;
@@ -25,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String BASE_URL="https://api.mangadex.org/";
     ActivityMainBinding binding;
     BottomNavigationView bottomNavigationView;
+    androidx.appcompat.widget.Toolbar toolbarMain;
+
+    SharedPreferences darkModeSharePref;
+    int darkMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +51,22 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setItemBackgroundResource(R.drawable.bottom_nav_bar_item_bg);
         Menu menu = bottomNavigationView.getMenu();
 
+        toolbarMain = findViewById(R.id.toolbarMain);
+        setSupportActionBar(toolbarMain);
+
         changeFragment(new LibraryFragment());
+
+        darkModeSharePref = getSharedPreferences("DARK_MODE", Context.MODE_PRIVATE);
+        darkMode = darkModeSharePref.getInt("darkMode", 2);
+
+        if(darkMode == 1){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else if(darkMode == 2){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        } else if (darkMode == 0) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             menu.findItem(R.id.libraryItem).setIcon(R.drawable.ic_library_nav);
@@ -44,21 +75,24 @@ public class MainActivity extends AppCompatActivity {
             if(item.getItemId() == R.id.libraryItem){
                 item.setIcon(R.drawable.ic_library_nav_selected);
                 changeFragment(new LibraryFragment());
+                toolbarMain.setTitle("Library");
 
             } else if (item.getItemId() == R.id.browseItem) {
                 item.setIcon(R.drawable.ic_browse_nav_selected);
                 changeFragment(new BrowseFragment());
+                toolbarMain.setTitle("Browse");
 
             } else if (item.getItemId() == R.id.historyItem) {
                 changeFragment(new HistoryFragment());
+                toolbarMain.setTitle("History");
 
             } else if (item.getItemId() == R.id.moreItem) {
                 changeFragment(new MoreFragment());
-
             }
 
             return true;
         });
+
 
         callApi();
     }
@@ -66,9 +100,30 @@ public class MainActivity extends AppCompatActivity {
     private void changeFragment(Fragment fragment){
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.flMain,fragment);
+        FragmentTransaction fragmentTransaction = fragmentManager
+                .beginTransaction()
+                .setCustomAnimations(
+                        R.anim.fade_in,
+                        R.anim.fade_out
+                )
+                .replace(R.id.flMain, fragment);
+
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemID =item.getItemId();
+
+        return super.onOptionsItemSelected(item);
     }
 
     void callApi() {

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.mangaapp_finalproject.placeholder.PlaceholderContent;
 
@@ -23,6 +24,8 @@ public class HistoryFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+
+    androidx.appcompat.widget.Toolbar toolbarMain;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -54,6 +57,9 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history_list, container, false);
+
+        toolbarMain = getActivity().findViewById(R.id.toolbarMain);
+        toolbarMain.setVisibility(View.VISIBLE);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
