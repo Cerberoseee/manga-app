@@ -7,5 +7,4 @@ public class ChapterResponse {
     public Integer limit;
     public Integer offset;
     public Integer total;
-
 }

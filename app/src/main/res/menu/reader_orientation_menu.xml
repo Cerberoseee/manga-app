@@ -1,0 +1,12 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/portraitItem"
+        android:icon="@drawable/ic_browser_nav"
+        android:title="Portrait" />
+    <item
+        android:id="@+id/landscapeItem"
+        android:icon="@drawable/ic_library_nav"
+        android:title="Landscape" />
+
+</menu>

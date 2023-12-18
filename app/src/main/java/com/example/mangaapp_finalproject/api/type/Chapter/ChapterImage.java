@@ -1,7 +1,7 @@
 package com.example.mangaapp_finalproject.api.type.Chapter;
 
 public class ChapterImage {
-    public String result;
-    public String baseUrl;
-    public ChapterImageData chapter;
+    public String hash;
+    public String data[];
+    public String dataSaver[];
 }

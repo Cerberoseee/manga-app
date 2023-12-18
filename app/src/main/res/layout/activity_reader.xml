@@ -4,6 +4,28 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <Button
+        android:id="@+id/next_chap_btn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="24dp"
+        android:layout_weight="1"
+        android:background="@drawable/reader_next_chapter"
+        android:foreground="@drawable/baseline_fast_forward_24"
+        android:foregroundGravity="center"
+        android:padding="24dp" />
+
+    <Button
+        android:id="@+id/prev_chap_btn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="24dp"
+        android:background="@drawable/reader_next_chapter"
+        android:foreground="@drawable/baseline_fast_rewind_24"
+        android:foregroundGravity="center" />
+
     <androidx.viewpager.widget.DirectionalViewPager
         android:id="@+id/reader"
         android:layout_width="match_parent"
@@ -98,7 +120,7 @@
             android:layout_marginRight="24dp"
             android:fontFamily="@font/inter_bold"
             android:gravity="center"
-            android:text="01/12"
+            android:text="00/00"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
 
@@ -114,6 +136,7 @@
             android:layout_height="32dp"
             android:layout_marginLeft="32dp"
             android:background="@drawable/baseline_screen_rotation_24" />
+
     </LinearLayout>
 
 

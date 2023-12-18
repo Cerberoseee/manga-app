@@ -38,17 +38,25 @@ public class ChapterImageFragment extends Fragment {
         if (getArguments() != null) {
             imageUrl = getArguments().getString(IMAGE_URL);
         }
-
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        String baseUrl = getArguments().getString("baseUrl");
+        String hash = getArguments().getString("hash");
+        String id = getArguments().getString("id");
+        boolean dataSaver = getArguments().getBoolean("dataSaver");
+
+        String link = baseUrl + "/data/" + hash + "/" + id;
+        if (dataSaver) {
+            link = baseUrl + "/data-saver/" + hash + "/" + id;
+        }
+
         PhotoView image = (PhotoView) getView().findViewById(R.id.photo_view);
-        Picasso.get().load("https://picsum.photos/200/300").into(image);
+        Picasso.get().load(link).into(image);
         PhotoViewAttacher mAttach = new PhotoViewAttacher(image);
         mAttach.setOnPhotoTapListener(new OnPhotoTapListener() {
             @Override
             public void onPhotoTap(ImageView view, float x, float y) {
-                Log.i("tap", "tap");
                 ((ReaderActivity)getActivity()).toggleMenu();
             }
         });

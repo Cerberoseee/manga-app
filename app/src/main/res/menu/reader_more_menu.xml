@@ -1,0 +1,11 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/saveItem"
+        android:icon="@drawable/ic_library_nav"
+        android:title="Save this image" />
+    <item
+        android:id="@+id/webItem"
+        android:icon="@drawable/ic_history_nav"
+        android:title="Go to website" />
+</menu>
