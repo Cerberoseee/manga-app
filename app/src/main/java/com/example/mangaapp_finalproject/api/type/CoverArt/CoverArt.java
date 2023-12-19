@@ -1,8 +1,8 @@
 package com.example.mangaapp_finalproject.api.type.CoverArt;
 
 
-public class CoverArt {
-    public String id;
-    public String type;
+import com.example.mangaapp_finalproject.api.type.Relationship.RelationshipAttribute;
+
+public class CoverArt extends RelationshipAttribute {
     public CoverArtAttributes attributes;
 }

@@ -3,48 +3,38 @@ package com.example.mangaapp_finalproject.reader;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.DirectionalViewPager;
 import androidx.viewpager.widget.ViewPager;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mangaapp_finalproject.MainActivity;
 import com.example.mangaapp_finalproject.R;
 import com.example.mangaapp_finalproject.api.ApiService;
+import com.example.mangaapp_finalproject.api.type.Chapter.ChapterDetailResponse;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterImageResponse;
+import com.example.mangaapp_finalproject.api.type.Relationship.RelationshipAttribute;
+import com.example.mangaapp_finalproject.api.type.Relationship.RelationshipDeserializer;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,59 +45,48 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ReaderActivity extends AppCompatActivity {
     DirectionalViewPager reader;
     ReaderAdapter readerAdapter;
-    androidx.appcompat.widget.Toolbar toolbarReader;
-    LinearLayout bottomMenu;
-    Button btnDirect, btnOrientate, btnNextChap, btnNext, btnPrev, btnPrevChap;
-    ImageButton ibtnDirect, ibtnRotate, ibtnNextChap, ibtnNext, ibtnPrev, ibtnPrevChap;
-    TextView textPageNumber;
+    LinearLayout menu1;
+    LinearLayout menu2;
+    Button btnDirect, btnOrientate, btnMore, btnNextChap, btnNext, btnPrev, btnPrevChap;
+    TextView textPageNumber, textManga, textChapter;
     boolean isShowMenu = true;
     int totalPage;
     String[] chapterList;
-    String id, mangaId, prevChapId = null, nextChapId = null, chapterName, mangaName;
+    String id, mangaId, prevChapId = null, nextChapId = null, mangaName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
 
-        toolbarReader = findViewById(R.id.toolbarReader);
-        setSupportActionBar(toolbarReader);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         if (getIntent().getExtras() == null) {
             id = "0a54fd99-2b8d-4b9a-bf2f-9b2c5b3a3ac4";
             mangaId = "5b93fa0f-0640-49b8-974e-954b9959929b";
             chapterList = new String[]{"0a54fd99-2b8d-4b9a-bf2f-9b2c5b3a3ac4"};
-            mangaName = "Bochi the Rock";
-            chapterName = "Chapter 1";
+            mangaName = "Shimeji Simulation";
         } else {
-            id = getIntent().getExtras().get("id").toString();
-            mangaId = getIntent().getExtras().get("mangaId").toString();
+            id = Objects.requireNonNull(getIntent().getExtras().get("id")).toString();
+            mangaId = Objects.requireNonNull(getIntent().getExtras().get("mangaId")).toString();
             chapterList = (String[]) getIntent().getExtras().get("chapterList");
             mangaName = getIntent().getExtras().getString("mangaName");
-            chapterName = getIntent().getExtras().getString("chapterName");
         }
 
         reader = findViewById(R.id.reader);
 
-        bottomMenu = findViewById(R.id.menu_down);
+        menu1 = findViewById(R.id.menu_up);
+        menu2 = findViewById(R.id.menu_down);
 
-//        btnDirect = findViewById(R.id.direct_btn);
-//        btnOrientate = findViewById(R.id.rotate_btn);
-//        btnMore = findViewById(R.id.more_btn);
+        btnDirect = findViewById(R.id.direct_btn);
+        btnOrientate = findViewById(R.id.rotate_btn);
+        btnMore = findViewById(R.id.more_btn);
         btnNextChap = findViewById(R.id.next_chap_btn);
         btnPrevChap = findViewById(R.id.prev_chap_btn);
-//        btnNext = findViewById(R.id.next_btn);
-//        btnPrev = findViewById(R.id.prev_btn);
-
-        ibtnDirect = findViewById(R.id.ibtnDirect);
-        ibtnPrev = findViewById(R.id.ibtnPrev);
-        ibtnNext = findViewById(R.id.ibtnNext);
-        ibtnRotate = findViewById(R.id.ibtnRotate);
+        btnNext = findViewById(R.id.next_btn);
+        btnPrev = findViewById(R.id.prev_btn);
 
         textPageNumber = findViewById(R.id.text_page);
-//        textManga = toolbarReader.getTitle().toString();
-//        textChapter = findViewById(R.id.chapter_name);
+        textManga = findViewById(R.id.manga_name);
+        textChapter = findViewById(R.id.chapter_name);
 
         btnNextChap.setVisibility(View.GONE);
 
@@ -123,35 +102,52 @@ public class ReaderActivity extends AppCompatActivity {
             btnNextChap.setVisibility(View.GONE);
         }
 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(RelationshipAttribute.class, new RelationshipDeserializer());
+        Gson gson = gsonBuilder.create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.mangadex.org/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<ChapterImageResponse> call = apiService.getChapterImageUrl(id);
+        Call<ChapterImageResponse> imageCall = apiService.getChapterImageUrl(id);
+        Call<ChapterDetailResponse> infoCall = apiService.getChapter(id, null);
 
-        toolbarReader.setTitle(mangaName);
-        toolbarReader.setSubtitle(chapterName);
-
-        call.enqueue(new Callback<ChapterImageResponse>() {
+        imageCall.enqueue(new Callback<ChapterImageResponse>() {
             @Override
-            public void onResponse(Call<ChapterImageResponse> call, @NonNull Response<ChapterImageResponse> response) {
+            public void onResponse(@NonNull Call<ChapterImageResponse> call, @NonNull Response<ChapterImageResponse> response) {
                 if (response.isSuccessful()) {
                     ChapterImageResponse res = response.body();
                     readerAdapter = new ReaderAdapter(getSupportFragmentManager(), res);
                     reader.setAdapter(readerAdapter);
                     totalPage = res.chapter.data.length;
-                    textPageNumber.setText("01/" + new Integer(totalPage).toString());
+                    textPageNumber.setText("01/" + Integer.valueOf(totalPage).toString());
                 }
             }
 
             @Override
-            public void onFailure(Call<ChapterImageResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ChapterImageResponse> call, Throwable t) {
                 Toast.makeText(ReaderActivity.this, "Unable to fetch image", Toast.LENGTH_SHORT).show();
             }
         });
-        ibtnDirect.setOnClickListener(new View.OnClickListener() {
+        infoCall.enqueue(new Callback<ChapterDetailResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ChapterDetailResponse> call, @NonNull Response<ChapterDetailResponse> response) {
+                if (response.isSuccessful()) {
+                    ChapterDetailResponse res = response.body();
+                    textChapter.setText(res.data.attributes.title);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ChapterDetailResponse> call, Throwable t) {
+                Toast.makeText(ReaderActivity.this, "Unable to fetch image", Toast.LENGTH_SHORT).show();
+            }
+        });
+        btnDirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu pm = new PopupMenu(ReaderActivity.this, view);
@@ -173,7 +169,7 @@ public class ReaderActivity extends AppCompatActivity {
                 pm.show();
             }
         });
-        ibtnRotate.setOnClickListener(new View.OnClickListener() {
+        btnOrientate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu pm = new PopupMenu(ReaderActivity.this, view);
@@ -195,29 +191,28 @@ public class ReaderActivity extends AppCompatActivity {
                 pm.show();
             }
         });
-
-//        btnMore.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                PopupMenu pm = new PopupMenu(ReaderActivity.this, view);
-//                pm.getMenuInflater().inflate(R.menu.reader_more_menu, pm.getMenu());
-//                pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                        if (menuItem.getItemId() == R.id.saveItem) {
-//                            saveImage();
-//                        }
-//                        if (menuItem.getItemId() == R.id.webItem) {
-//                            Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("https://mangadex.org/title/" + mangaId));
-//                            startActivity(viewIntent);
-//                        }
-//                        return true;
-//                    }
-//                });
-//                pm.show();
-//            }
-//        });
-        ibtnNext.setOnClickListener(new View.OnClickListener() {
+        btnMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu pm = new PopupMenu(ReaderActivity.this, view);
+                pm.getMenuInflater().inflate(R.menu.reader_more_menu, pm.getMenu());
+                pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.saveItem) {
+                            saveImage();
+                        }
+                        if (menuItem.getItemId() == R.id.webItem) {
+                            Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("https://mangadex.org/title/" + mangaId));
+                            startActivity(viewIntent);
+                        }
+                        return true;
+                    }
+                });
+                pm.show();
+            }
+        });
+        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int page = reader.getCurrentItem();
@@ -226,7 +221,7 @@ public class ReaderActivity extends AppCompatActivity {
                 }
             }
         });
-        ibtnPrev.setOnClickListener(new View.OnClickListener() {
+        btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int page = reader.getCurrentItem();
@@ -242,6 +237,7 @@ public class ReaderActivity extends AppCompatActivity {
                 intent.putExtra("id", nextChapId);
                 intent.putExtra("chapterList", chapterList);
                 intent.putExtra("mangaId", mangaId);
+                intent.putExtra("mangaName", mangaName);
 
                 startActivity(intent);
             }
@@ -253,6 +249,7 @@ public class ReaderActivity extends AppCompatActivity {
                 intent.putExtra("id", prevChapId);
                 intent.putExtra("chapterList", chapterList);
                 intent.putExtra("mangaId", mangaId);
+                intent.putExtra("mangaName", mangaName);
 
                 startActivity(intent);
             }
@@ -280,36 +277,12 @@ public class ReaderActivity extends AppCompatActivity {
                     }
                 }
 
-                textPageNumber.setText(String.format("%02d", new Integer(position + 1)) + "/" + new Integer(totalPage).toString());
+                textPageNumber.setText(String.format("%02d", Integer.valueOf(position + 1)) + "/" + Integer.valueOf(totalPage).toString());
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {}
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.reader_more_menu, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemID =item.getItemId();
-        if (itemID == R.id.saveItem) {
-            saveImage();
-        }
-        else if (itemID == R.id.webItem) {
-            Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("https://mangadex.org/title/" + mangaId));
-            startActivity(viewIntent);
-
-        } else if (itemID == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void toggleMenu() {
@@ -323,36 +296,36 @@ public class ReaderActivity extends AppCompatActivity {
     }
 
     private void menuOnAnimation() {
-        toolbarReader.setVisibility(View.VISIBLE);
-        bottomMenu.setVisibility(View.VISIBLE);
+        menu1.setVisibility(View.VISIBLE);
+        menu2.setVisibility(View.VISIBLE);
 
-        toolbarReader.animate()
+        menu1.animate()
             .translationY(0)
             .setDuration(500)
             .setListener(null);
-        bottomMenu.animate()
+        menu2.animate()
             .translationY(0)
             .setDuration(500)
             .setListener(null);
     }
 
     private void menuOffAnimation() {
-        toolbarReader.animate()
+        menu1.animate()
             .translationY(-500)
             .setDuration(500)
             .setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(@NonNull Animator animator) {
-                    toolbarReader.setVisibility(View.GONE);
+                    menu1.setVisibility(View.GONE);
                 }
             });
-        bottomMenu.animate()
+        menu2.animate()
             .translationY(500)
             .setDuration(500)
             .setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(@NonNull Animator animator) {
-                    bottomMenu.setVisibility(View.GONE);
+                    menu2.setVisibility(View.GONE);
                 }
             });
     }
