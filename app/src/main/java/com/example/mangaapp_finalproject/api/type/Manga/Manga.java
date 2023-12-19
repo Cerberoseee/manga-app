@@ -1,6 +1,6 @@
 package com.example.mangaapp_finalproject.api.type.Manga;
 
-import com.example.mangaapp_finalproject.api.type.Relationship;
+import com.example.mangaapp_finalproject.api.type.Relationship.Relationship;
 
 public class Manga {
     public String id;

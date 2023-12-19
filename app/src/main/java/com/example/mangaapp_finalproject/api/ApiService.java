@@ -1,5 +1,6 @@
 package com.example.mangaapp_finalproject.api;
 
+import com.example.mangaapp_finalproject.api.type.Chapter.ChapterDetailResponse;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterImageResponse;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterResponse;
 import com.example.mangaapp_finalproject.api.type.Manga.MangaResponse;
@@ -44,6 +45,11 @@ public interface ApiService {
     Call<MangaResponse> getMangaRandom(
         @Query("includes[]") String[] includes,
         @Query("contentRating[]") String[] contentRate
+    );
+    @GET("/chapter/{id}")
+    Call<ChapterDetailResponse> getChapter(
+        @Path(value = "id", encoded = true) String id,
+        @Query("includes[]") String[] includes
     );
     @GET("/at-home/server/{id}")
     Call<ChapterImageResponse> getChapterImageUrl(

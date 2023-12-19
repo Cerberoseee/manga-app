@@ -77,7 +77,6 @@
                 android:layout_marginRight="24dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Chapter 1"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 

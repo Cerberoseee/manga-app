@@ -3,23 +3,18 @@ package com.example.mangaapp_finalproject.reader;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.DirectionalViewPager;
 import androidx.viewpager.widget.ViewPager;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,15 +25,16 @@ import android.widget.Toast;
 
 import com.example.mangaapp_finalproject.R;
 import com.example.mangaapp_finalproject.api.ApiService;
+import com.example.mangaapp_finalproject.api.type.Chapter.ChapterDetailResponse;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterImageResponse;
+import com.example.mangaapp_finalproject.api.type.Relationship.RelationshipAttribute;
+import com.example.mangaapp_finalproject.api.type.Relationship.RelationshipDeserializer;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,7 +52,7 @@ public class ReaderActivity extends AppCompatActivity {
     boolean isShowMenu = true;
     int totalPage;
     String[] chapterList;
-    String id, mangaId, prevChapId = null, nextChapId = null, chapterName, mangaName;
+    String id, mangaId, prevChapId = null, nextChapId = null, mangaName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +64,11 @@ public class ReaderActivity extends AppCompatActivity {
             mangaId = "5b93fa0f-0640-49b8-974e-954b9959929b";
             chapterList = new String[]{"0a54fd99-2b8d-4b9a-bf2f-9b2c5b3a3ac4"};
             mangaName = "Shimeji Simulation";
-            chapterName = "Chapter 1";
         } else {
-            id = getIntent().getExtras().get("id").toString();
-            mangaId = getIntent().getExtras().get("mangaId").toString();
+            id = Objects.requireNonNull(getIntent().getExtras().get("id")).toString();
+            mangaId = Objects.requireNonNull(getIntent().getExtras().get("mangaId")).toString();
             chapterList = (String[]) getIntent().getExtras().get("chapterList");
             mangaName = getIntent().getExtras().getString("mangaName");
-            chapterName = getIntent().getExtras().getString("chapterName");
         }
 
         reader = findViewById(R.id.reader);
@@ -108,31 +102,48 @@ public class ReaderActivity extends AppCompatActivity {
             btnNextChap.setVisibility(View.GONE);
         }
 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(RelationshipAttribute.class, new RelationshipDeserializer());
+        Gson gson = gsonBuilder.create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.mangadex.org/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<ChapterImageResponse> call = apiService.getChapterImageUrl(id);
+        Call<ChapterImageResponse> imageCall = apiService.getChapterImageUrl(id);
+        Call<ChapterDetailResponse> infoCall = apiService.getChapter(id, null);
 
-        textManga.setText(mangaName);
-        textChapter.setText(chapterName);
-
-        call.enqueue(new Callback<ChapterImageResponse>() {
+        imageCall.enqueue(new Callback<ChapterImageResponse>() {
             @Override
-            public void onResponse(Call<ChapterImageResponse> call, @NonNull Response<ChapterImageResponse> response) {
+            public void onResponse(@NonNull Call<ChapterImageResponse> call, @NonNull Response<ChapterImageResponse> response) {
                 if (response.isSuccessful()) {
                     ChapterImageResponse res = response.body();
                     readerAdapter = new ReaderAdapter(getSupportFragmentManager(), res);
                     reader.setAdapter(readerAdapter);
                     totalPage = res.chapter.data.length;
-                    textPageNumber.setText("01/" + new Integer(totalPage).toString());
+                    textPageNumber.setText("01/" + Integer.valueOf(totalPage).toString());
                 }
             }
 
             @Override
-            public void onFailure(Call<ChapterImageResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ChapterImageResponse> call, Throwable t) {
+                Toast.makeText(ReaderActivity.this, "Unable to fetch image", Toast.LENGTH_SHORT).show();
+            }
+        });
+        infoCall.enqueue(new Callback<ChapterDetailResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ChapterDetailResponse> call, @NonNull Response<ChapterDetailResponse> response) {
+                if (response.isSuccessful()) {
+                    ChapterDetailResponse res = response.body();
+                    textChapter.setText(res.data.attributes.title);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ChapterDetailResponse> call, Throwable t) {
                 Toast.makeText(ReaderActivity.this, "Unable to fetch image", Toast.LENGTH_SHORT).show();
             }
         });
@@ -226,6 +237,7 @@ public class ReaderActivity extends AppCompatActivity {
                 intent.putExtra("id", nextChapId);
                 intent.putExtra("chapterList", chapterList);
                 intent.putExtra("mangaId", mangaId);
+                intent.putExtra("mangaName", mangaName);
 
                 startActivity(intent);
             }
@@ -237,6 +249,7 @@ public class ReaderActivity extends AppCompatActivity {
                 intent.putExtra("id", prevChapId);
                 intent.putExtra("chapterList", chapterList);
                 intent.putExtra("mangaId", mangaId);
+                intent.putExtra("mangaName", mangaName);
 
                 startActivity(intent);
             }
@@ -264,7 +277,7 @@ public class ReaderActivity extends AppCompatActivity {
                     }
                 }
 
-                textPageNumber.setText(String.format("%02d", new Integer(position + 1)) + "/" + new Integer(totalPage).toString());
+                textPageNumber.setText(String.format("%02d", Integer.valueOf(position + 1)) + "/" + Integer.valueOf(totalPage).toString());
             }
 
             @Override
