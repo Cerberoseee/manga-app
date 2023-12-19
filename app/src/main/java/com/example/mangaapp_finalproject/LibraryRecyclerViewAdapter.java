@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mangaapp_finalproject.detail.MangaInfoActivity;
 import com.example.mangaapp_finalproject.placeholder.PlaceholderContent.PlaceholderItem;
 import com.example.mangaapp_finalproject.databinding.FragmentLibraryBinding;
 

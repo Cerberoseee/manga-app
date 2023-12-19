@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
-    tools:context=".MangaInfoActivity">
+    tools:context=".detail.MangaInfoActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarMangaInfo"

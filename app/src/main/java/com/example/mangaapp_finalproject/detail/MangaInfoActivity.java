@@ -1,4 +1,4 @@
-package com.example.mangaapp_finalproject;
+package com.example.mangaapp_finalproject.detail;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,11 +11,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mangaapp_finalproject.R;
 import com.example.mangaapp_finalproject.reader.ReaderActivity;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MangaInfoActivity extends AppCompatActivity {
 
