@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/reader_container"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/back">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarReader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSecondary"
+        android:elevation="50dp"
+        app:menu="@menu/reader_direct_menu"
+        app:subtitle="@string/Manga_chapter"
+        app:title="@string/Manga_title" />
 
     <Button
         android:id="@+id/next_chap_btn"
@@ -12,8 +24,10 @@
         android:layout_marginRight="24dp"
         android:layout_weight="1"
         android:background="@drawable/reader_next_chapter"
-        android:foreground="@drawable/baseline_fast_forward_24"
+        android:backgroundTint="#FFFFFF"
+        android:foreground="@drawable/ic_next_chap"
         android:foregroundGravity="center"
+        android:foregroundTint="?attr/colorControlNormal"
         android:padding="24dp" />
 
     <Button
@@ -23,94 +37,46 @@
         android:layout_gravity="left|center_vertical"
         android:layout_marginLeft="24dp"
         android:background="@drawable/reader_next_chapter"
-        android:foreground="@drawable/baseline_fast_rewind_24"
-        android:foregroundGravity="center" />
+        android:foreground="@drawable/ic_prev_chap"
+        android:foregroundGravity="center"
+        android:foregroundTint="?attr/colorControlNormal" />
 
     <androidx.viewpager.widget.DirectionalViewPager
         android:id="@+id/reader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:orientation="horizontal">
 
     </androidx.viewpager.widget.DirectionalViewPager>
 
     <LinearLayout
-        android:id="@+id/menu_up"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_gravity="top"
-        android:background="#FF3D3D3D"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="24dp"
-        android:paddingTop="6dp"
-        android:paddingRight="18dp"
-        android:paddingBottom="6dp">
-
-        <Button
-            android:id="@+id/back_btn"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@drawable/baseline_arrow_back_ios_24" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/manga_name"
-                android:layout_width="match_parent"
-                android:layout_height="24sp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Shimeji Simulation"
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/chapter_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="24dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Chapter 1"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/more_btn"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@drawable/baseline_more_vert_24"
-            android:layoutDirection="rtl" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/menu_down"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_gravity="bottom"
-        android:background="#FF3D3D3D"
+        android:background="?attr/colorSecondary"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="6dp">
 
-        <Button
-            android:id="@+id/direct_btn"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginRight="32dp"
-            android:background="@drawable/baseline_phonelink_setup_24" />
+        <ImageButton
+            android:id="@+id/ibtnDirect"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_phone_settings"
+            android:tint="?colorControlNormal" />
 
-        <Button
-            android:id="@+id/prev_btn"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:background="@drawable/ic_prev" />
+        <ImageButton
+            android:id="@+id/ibtnPrev"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_prev"
+            android:tint="?colorControlNormal" />
 
         <TextView
             android:id="@+id/text_page"
@@ -121,21 +87,26 @@
             android:fontFamily="@font/inter_bold"
             android:gravity="center"
             android:text="00/00"
-            android:textColor="#FFFFFF"
+            android:textColor="?attr/colorControlNormal"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/next_btn"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:background="@drawable/ic_next" />
+        <ImageButton
+            android:id="@+id/ibtnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_next"
+            android:tint="?colorControlNormal" />
 
-        <Button
-            android:id="@+id/rotate_btn"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="32dp"
-            android:background="@drawable/baseline_screen_rotation_24" />
+        <ImageButton
+            android:id="@+id/ibtnRotate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_phone_rotate"
+            android:tint="?colorControlNormal" />
 
     </LinearLayout>
 

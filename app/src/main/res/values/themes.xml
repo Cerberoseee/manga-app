@@ -4,7 +4,7 @@
          Customize your light theme here.
          <item name="colorPrimary">@color/light_primary</item>
         <item name="colorSecondary">@color/light_secondary</item>
-        <item name="android:textColorPrimary">@color/dark</item>
+        <item name="colorControlNormal">@color/dark</item>
         <item name="dividerColor">@color/light_divider</item>
     </style>
 

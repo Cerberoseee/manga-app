@@ -2,7 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/saveItem"
-        android:icon="@drawable/ic_library_nav"
         android:title="Save this image" />
     <item
         android:id="@+id/webItem"

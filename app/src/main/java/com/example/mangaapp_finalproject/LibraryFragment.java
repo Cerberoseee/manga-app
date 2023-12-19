@@ -9,10 +9,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mangaapp_finalproject.placeholder.PlaceholderContent;
 
@@ -27,6 +30,7 @@ public class LibraryFragment extends Fragment {
     private int mColumnCount = 1;
 
     androidx.appcompat.widget.Toolbar toolbarMain;
+//    SwipeRefreshLayout swipeLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -62,6 +66,9 @@ public class LibraryFragment extends Fragment {
         toolbarMain = getActivity().findViewById(R.id.toolbarMain);
         toolbarMain.setVisibility(View.VISIBLE);
 
+//        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+//        swipeLayout.setOnRefreshListener(this);
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -80,4 +87,15 @@ public class LibraryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
+
+//    @Override
+//    public void onRefresh() {
+//        Toast.makeText(getContext(), "Refresh", Toast.LENGTH_SHORT).show();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                swipeLayout.setRefreshing(false);
+//            }
+//        }, 2000);
+//    }
 }

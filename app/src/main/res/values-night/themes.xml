@@ -4,7 +4,7 @@
          Customize your dark theme here.
          <item name="colorPrimary">@color/dark_primary</item>
         <item name="colorSecondary">@color/dark_secondary</item>
-        <item name="android:textColorPrimary">@color/light</item>
+        <item name="colorControlNormal">@color/light</item>
         <item name="dividerColor">@color/dark_divider</item>
 
     </style>

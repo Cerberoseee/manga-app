@@ -2,7 +2,9 @@ package com.example.mangaapp_finalproject;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -35,6 +37,14 @@ public class LibraryRecyclerViewAdapter extends RecyclerView.Adapter<LibraryRecy
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent (view.getContext(), MangaInfoActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override

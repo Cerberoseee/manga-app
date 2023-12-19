@@ -3,10 +3,8 @@
     >
     <item
         android:id="@+id/horizonItem"
-        android:icon="@drawable/ic_library_nav"
         android:title="Horizontal" />
     <item
         android:id="@+id/verticalItem"
-        android:icon="@drawable/ic_browser_nav"
         android:title="Vertical" />
 </menu>

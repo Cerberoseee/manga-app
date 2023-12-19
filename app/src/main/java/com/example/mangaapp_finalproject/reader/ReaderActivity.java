@@ -20,14 +20,20 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mangaapp_finalproject.MainActivity;
 import com.example.mangaapp_finalproject.R;
 import com.example.mangaapp_finalproject.api.ApiService;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterImageResponse;
@@ -49,10 +55,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ReaderActivity extends AppCompatActivity {
     DirectionalViewPager reader;
     ReaderAdapter readerAdapter;
-    LinearLayout menu1;
-    LinearLayout menu2;
-    Button btnDirect, btnOrientate, btnMore, btnNextChap, btnNext, btnPrev, btnPrevChap;
-    TextView textPageNumber, textManga, textChapter;
+    androidx.appcompat.widget.Toolbar toolbarReader;
+    LinearLayout bottomMenu;
+    Button btnDirect, btnOrientate, btnNextChap, btnNext, btnPrev, btnPrevChap;
+    ImageButton ibtnDirect, ibtnRotate, ibtnNextChap, ibtnNext, ibtnPrev, ibtnPrevChap;
+    TextView textPageNumber;
     boolean isShowMenu = true;
     int totalPage;
     String[] chapterList;
@@ -63,11 +70,15 @@ public class ReaderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
 
+        toolbarReader = findViewById(R.id.toolbarReader);
+        setSupportActionBar(toolbarReader);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (getIntent().getExtras() == null) {
             id = "0a54fd99-2b8d-4b9a-bf2f-9b2c5b3a3ac4";
             mangaId = "5b93fa0f-0640-49b8-974e-954b9959929b";
             chapterList = new String[]{"0a54fd99-2b8d-4b9a-bf2f-9b2c5b3a3ac4"};
-            mangaName = "Shimeji Simulation";
+            mangaName = "Bochi the Rock";
             chapterName = "Chapter 1";
         } else {
             id = getIntent().getExtras().get("id").toString();
@@ -79,20 +90,24 @@ public class ReaderActivity extends AppCompatActivity {
 
         reader = findViewById(R.id.reader);
 
-        menu1 = findViewById(R.id.menu_up);
-        menu2 = findViewById(R.id.menu_down);
+        bottomMenu = findViewById(R.id.menu_down);
 
-        btnDirect = findViewById(R.id.direct_btn);
-        btnOrientate = findViewById(R.id.rotate_btn);
-        btnMore = findViewById(R.id.more_btn);
+//        btnDirect = findViewById(R.id.direct_btn);
+//        btnOrientate = findViewById(R.id.rotate_btn);
+//        btnMore = findViewById(R.id.more_btn);
         btnNextChap = findViewById(R.id.next_chap_btn);
         btnPrevChap = findViewById(R.id.prev_chap_btn);
-        btnNext = findViewById(R.id.next_btn);
-        btnPrev = findViewById(R.id.prev_btn);
+//        btnNext = findViewById(R.id.next_btn);
+//        btnPrev = findViewById(R.id.prev_btn);
+
+        ibtnDirect = findViewById(R.id.ibtnDirect);
+        ibtnPrev = findViewById(R.id.ibtnPrev);
+        ibtnNext = findViewById(R.id.ibtnNext);
+        ibtnRotate = findViewById(R.id.ibtnRotate);
 
         textPageNumber = findViewById(R.id.text_page);
-        textManga = findViewById(R.id.manga_name);
-        textChapter = findViewById(R.id.chapter_name);
+//        textManga = toolbarReader.getTitle().toString();
+//        textChapter = findViewById(R.id.chapter_name);
 
         btnNextChap.setVisibility(View.GONE);
 
@@ -116,8 +131,8 @@ public class ReaderActivity extends AppCompatActivity {
         ApiService apiService = retrofit.create(ApiService.class);
         Call<ChapterImageResponse> call = apiService.getChapterImageUrl(id);
 
-        textManga.setText(mangaName);
-        textChapter.setText(chapterName);
+        toolbarReader.setTitle(mangaName);
+        toolbarReader.setSubtitle(chapterName);
 
         call.enqueue(new Callback<ChapterImageResponse>() {
             @Override
@@ -136,7 +151,7 @@ public class ReaderActivity extends AppCompatActivity {
                 Toast.makeText(ReaderActivity.this, "Unable to fetch image", Toast.LENGTH_SHORT).show();
             }
         });
-        btnDirect.setOnClickListener(new View.OnClickListener() {
+        ibtnDirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu pm = new PopupMenu(ReaderActivity.this, view);
@@ -158,7 +173,7 @@ public class ReaderActivity extends AppCompatActivity {
                 pm.show();
             }
         });
-        btnOrientate.setOnClickListener(new View.OnClickListener() {
+        ibtnRotate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu pm = new PopupMenu(ReaderActivity.this, view);
@@ -180,28 +195,29 @@ public class ReaderActivity extends AppCompatActivity {
                 pm.show();
             }
         });
-        btnMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu pm = new PopupMenu(ReaderActivity.this, view);
-                pm.getMenuInflater().inflate(R.menu.reader_more_menu, pm.getMenu());
-                pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        if (menuItem.getItemId() == R.id.saveItem) {
-                            saveImage();
-                        }
-                        if (menuItem.getItemId() == R.id.webItem) {
-                            Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("https://mangadex.org/title/" + mangaId));
-                            startActivity(viewIntent);
-                        }
-                        return true;
-                    }
-                });
-                pm.show();
-            }
-        });
-        btnNext.setOnClickListener(new View.OnClickListener() {
+
+//        btnMore.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                PopupMenu pm = new PopupMenu(ReaderActivity.this, view);
+//                pm.getMenuInflater().inflate(R.menu.reader_more_menu, pm.getMenu());
+//                pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                        if (menuItem.getItemId() == R.id.saveItem) {
+//                            saveImage();
+//                        }
+//                        if (menuItem.getItemId() == R.id.webItem) {
+//                            Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("https://mangadex.org/title/" + mangaId));
+//                            startActivity(viewIntent);
+//                        }
+//                        return true;
+//                    }
+//                });
+//                pm.show();
+//            }
+//        });
+        ibtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int page = reader.getCurrentItem();
@@ -210,7 +226,7 @@ public class ReaderActivity extends AppCompatActivity {
                 }
             }
         });
-        btnPrev.setOnClickListener(new View.OnClickListener() {
+        ibtnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int page = reader.getCurrentItem();
@@ -272,6 +288,30 @@ public class ReaderActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.reader_more_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemID =item.getItemId();
+        if (itemID == R.id.saveItem) {
+            saveImage();
+        }
+        else if (itemID == R.id.webItem) {
+            Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("https://mangadex.org/title/" + mangaId));
+            startActivity(viewIntent);
+
+        } else if (itemID == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void toggleMenu() {
         if (isShowMenu) {
             isShowMenu = false;
@@ -283,36 +323,36 @@ public class ReaderActivity extends AppCompatActivity {
     }
 
     private void menuOnAnimation() {
-        menu1.setVisibility(View.VISIBLE);
-        menu2.setVisibility(View.VISIBLE);
+        toolbarReader.setVisibility(View.VISIBLE);
+        bottomMenu.setVisibility(View.VISIBLE);
 
-        menu1.animate()
+        toolbarReader.animate()
             .translationY(0)
             .setDuration(500)
             .setListener(null);
-        menu2.animate()
+        bottomMenu.animate()
             .translationY(0)
             .setDuration(500)
             .setListener(null);
     }
 
     private void menuOffAnimation() {
-        menu1.animate()
+        toolbarReader.animate()
             .translationY(-500)
             .setDuration(500)
             .setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(@NonNull Animator animator) {
-                    menu1.setVisibility(View.GONE);
+                    toolbarReader.setVisibility(View.GONE);
                 }
             });
-        menu2.animate()
+        bottomMenu.animate()
             .translationY(500)
             .setDuration(500)
             .setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(@NonNull Animator animator) {
-                    menu2.setVisibility(View.GONE);
+                    bottomMenu.setVisibility(View.GONE);
                 }
             });
     }

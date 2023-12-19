@@ -25,4 +25,13 @@
     <string name="Dark_mode_OFF">Off</string>
     <string name="Dark_mode_Auto">System settings</string>
 
+    <string name="Manga_title">Bocchi the Rock!</string>
+    <string name="Manga_chapter">Chapter 1</string>
+    <string name="Manga_author">Aki Hamachi</string>
+    <string name="Manga_status">Status: finished</string>
+    <string name="Manga_rating">10.0</string>
+    <string name="Manga_save_btn">Add to library</string>
+    <string name="Manga_web_btn">Go to web</string>
+    <string name="Manga_desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam </string>
+
 </resources>
