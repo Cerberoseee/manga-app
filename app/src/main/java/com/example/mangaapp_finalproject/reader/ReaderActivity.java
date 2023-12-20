@@ -15,6 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,12 +27,11 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mangaapp_finalproject.MainActivity;
 import com.example.mangaapp_finalproject.R;
 import com.example.mangaapp_finalproject.api.ApiService;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterDetailResponse;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterImageResponse;
-import com.example.mangaapp_finalproject.api.type.Relationship.RelationshipAttribute;
+import com.example.mangaapp_finalproject.api.type.Relationship.Relationship;
 import com.example.mangaapp_finalproject.api.type.Relationship.RelationshipDeserializer;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.gson.Gson;
@@ -57,7 +57,7 @@ public class ReaderActivity extends AppCompatActivity {
     boolean isShowMenu = true;
     int totalPage;
     String[] chapterList;
-    String id, mangaId, prevChapId = null, nextChapId = null, mangaName;
+    String id, mangaId, prevChapId = null, nextChapId = null, mangaName, chapterName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class ReaderActivity extends AppCompatActivity {
         } else {
             id = Objects.requireNonNull(getIntent().getExtras().get("id")).toString();
             mangaId = Objects.requireNonNull(getIntent().getExtras().get("mangaId")).toString();
-            chapterList = (String[]) getIntent().getExtras().get("chapterList");
+            chapterList = getIntent().getStringArrayExtra("chapterList");
             mangaName = getIntent().getExtras().getString("mangaName");
         }
 
@@ -102,8 +102,8 @@ public class ReaderActivity extends AppCompatActivity {
 //        textManga = findViewById(R.id.manga_name);
 //        textChapter = findViewById(R.id.chapter_name);
 
-//        toolbarReader.setTitle(mangaName);
-        toolbarReader.setSubtitle("Chapter 1");
+        toolbarReader.setTitle(mangaName);
+        toolbarReader.setSubtitle(chapterName);
 
         btnNextChap.setVisibility(View.GONE);
 
@@ -119,14 +119,10 @@ public class ReaderActivity extends AppCompatActivity {
             btnNextChap.setVisibility(View.GONE);
         }
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(RelationshipAttribute.class, new RelationshipDeserializer());
-        Gson gson = gsonBuilder.create();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.mangadex.org/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
@@ -141,7 +137,7 @@ public class ReaderActivity extends AppCompatActivity {
                     readerAdapter = new ReaderAdapter(getSupportFragmentManager(), res);
                     reader.setAdapter(readerAdapter);
                     totalPage = res.chapter.data.length;
-                    textPageNumber.setText("01/" + Integer.valueOf(totalPage).toString());
+                    textPageNumber.setText("01/" + String.format("%02d", Integer.valueOf(totalPage)));
                 }
             }
 
@@ -155,7 +151,7 @@ public class ReaderActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<ChapterDetailResponse> call, @NonNull Response<ChapterDetailResponse> response) {
                 if (response.isSuccessful()) {
                     ChapterDetailResponse res = response.body();
-                    toolbarReader.setTitle(res.data.attributes.title);
+                    toolbarReader.setSubtitle("Chapter " + res.data.attributes.chapter + " - " + res.data.attributes.title);
                 }
             }
 
@@ -295,7 +291,7 @@ public class ReaderActivity extends AppCompatActivity {
                     }
                 }
 
-                textPageNumber.setText(String.format("%02d", Integer.valueOf(position + 1)) + "/" + Integer.valueOf(totalPage).toString());
+                textPageNumber.setText(String.format("%02d", Integer.valueOf(position + 1)) + "/" + String.format("%02d", Integer.valueOf(totalPage)));
             }
 
             @Override

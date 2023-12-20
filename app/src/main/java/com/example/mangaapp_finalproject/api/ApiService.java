@@ -3,6 +3,7 @@ package com.example.mangaapp_finalproject.api;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterDetailResponse;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterImageResponse;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterResponse;
+import com.example.mangaapp_finalproject.api.type.Manga.MangaDetailResponse;
 import com.example.mangaapp_finalproject.api.type.Manga.MangaResponse;
 import com.example.mangaapp_finalproject.api.type.Statistic.Statistic;
 import com.example.mangaapp_finalproject.api.type.Statistic.StatisticResponse;
@@ -24,7 +25,7 @@ public interface ApiService {
         @Query("contentRating[]") String[] contentRate
     );
     @GET("/manga/{id}")
-    Call<MangaResponse> getMangaDetail(
+    Call<MangaDetailResponse> getMangaDetail(
         @Path(value = "id", encoded = true) String id,
         @Query("includes[]") String[] query
     );
@@ -39,7 +40,8 @@ public interface ApiService {
         @Query("translatedLanguage[]") String[] languages,
         @Query("includes[]") String[] includes,
         @Query("limit") Integer limit,
-        @Query("offset") Integer offset
+        @Query("offset") Integer offset,
+        @Query("order[chapter]") String order
     );
     @GET("/manga/random")
     Call<MangaResponse> getMangaRandom(

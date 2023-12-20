@@ -3,8 +3,8 @@ package com.example.mangaapp_finalproject.api.type.Manga;
 import com.example.mangaapp_finalproject.api.type.LanguageCollection;
 import com.example.mangaapp_finalproject.api.type.Tag.Tag;
 
-class MangaAttributes {
-    public String title;
+public class MangaAttributes {
+    public LanguageCollection title;
     public LanguageCollection alTitles;
 
     public LanguageCollection description;

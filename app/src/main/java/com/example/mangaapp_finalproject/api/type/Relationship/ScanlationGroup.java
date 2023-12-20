@@ -1,6 +1,9 @@
-package com.example.mangaapp_finalproject.api.type.ScanlationGroup;
+package com.example.mangaapp_finalproject.api.type.Relationship;
 
-public class ScanlationGroupAttributes {
+public class ScanlationGroup implements RelationshipAttribute {
+    public ScanlationGroup(String name) {
+        this.name = name;
+    }
     public String name;
     public String altNames;
     public Boolean locked;

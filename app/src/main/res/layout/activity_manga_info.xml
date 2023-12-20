@@ -15,17 +15,18 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         app:menu="@menu/mangainfo_menu"
-        app:title="@string/Manga_title" />
+        app:title="Detail Manga" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:id="@+id/layoutMangaInfo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="38dp"
             android:orientation="vertical">
 
@@ -39,10 +40,11 @@
 
                 <ImageView
                     android:id="@+id/ivMangaView"
-                    android:layout_width="133dp"
-                    android:layout_height="191dp"
+                    android:layout_width="120dp"
+                    android:layout_height="180dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/placeholder_manga2" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/solid_grey_svg" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -53,7 +55,6 @@
                         android:id="@+id/tvMangaTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/Manga_title"
                         android:textColor="?attr/colorControlNormal"
                         android:textSize="26sp" />
 
@@ -62,14 +63,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:hint="@string/Manga_author"
+                        android:textColor="@color/hint" />
+
+                    <TextView
+                        android:id="@+id/tvMangaArtist"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:textColor="@color/hint" />
 
                     <TextView
                         android:id="@+id/tvMangaStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/Manga_status"
                         android:textColor="@color/hint" />
 
                     <TextView
@@ -79,7 +84,6 @@
                         android:layout_marginTop="10dp"
                         android:drawableStart="@drawable/ic_rating_star"
                         android:drawablePadding="6dp"
-                        android:text="@string/Manga_rating"
                         android:textColor="@color/rating"
                         android:textStyle="bold" />
 
@@ -110,7 +114,7 @@
 
                 <Button
                     android:id="@+id/btnMangaWebview"
-                    android:layout_width="180dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="42dp"
                     android:layout_gravity="right"
                     android:layout_marginStart="8dp"
@@ -154,17 +158,11 @@
                     app:tint="?attr/colorControlNormal" />
             </com.ms.square.android.expandabletextview.ExpandableTextView>
 
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="12dp"
-                android:background="?attr/dividerColor" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="18dp"
                 android:layout_marginBottom="4dp"
                 android:orientation="horizontal">
@@ -184,10 +182,9 @@
                     android:id="@+id/btnLangFilter"
                     style="@style/Widget.AppCompat.TextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="32dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
                     android:background="@drawable/primary_button_shape"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
@@ -195,20 +192,14 @@
                     android:textColor="@color/white" />
             </LinearLayout>
 
-            <LinearLayout
+            <ListView
+                android:id="@+id/listMangaChapter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ListView
-                    android:id="@+id/listMangaChapter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp" />
-            </LinearLayout>
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="18dp" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
