@@ -1,6 +1,7 @@
 package com.example.mangaapp_finalproject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,13 +11,30 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.mangaapp_finalproject.api.ApiService;
 import com.example.mangaapp_finalproject.api.type.Manga.Manga;
+import com.example.mangaapp_finalproject.api.type.Manga.MangaDetailResponse;
+import com.example.mangaapp_finalproject.api.type.Manga.MangaResponse;
+import com.example.mangaapp_finalproject.api.type.Relationship.Relationship;
+import com.example.mangaapp_finalproject.api.type.Relationship.RelationshipDeserializer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A fragment representing a list of Items.
@@ -30,7 +48,7 @@ public class LibraryFragment extends Fragment {
 
     androidx.appcompat.widget.Toolbar toolbarMain;
 
-    ArrayList<Manga> manga = new ArrayList<>();
+    Manga[] manga;
     LibraryRecyclerViewAdapter libraryAdapter;
 
     /**
@@ -76,8 +94,7 @@ public class LibraryFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            libraryAdapter = new LibraryRecyclerViewAdapter(context, manga);
-            recyclerView.setAdapter(libraryAdapter);
+            getManga(context, recyclerView);
         }
         return view;
     }
@@ -85,6 +102,47 @@ public class LibraryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void getManga(Context context, RecyclerView recyclerView) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Relationship.class, new RelationshipDeserializer());
+        Gson gson = gsonBuilder.create();
+
+        Retrofit retrofitRelate = new Retrofit.Builder()
+                .baseUrl("https://api.mangadex.org/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ApiService apiService = retrofitRelate.create(ApiService.class);
+
+        SharedPreferences prefs = context.getSharedPreferences("library",Context.MODE_PRIVATE);
+
+        Set<String> set = prefs.getStringSet("library", null);
+        List<String> libraryList = new ArrayList<>();
+        if (set != null) {
+            libraryList = new ArrayList<String>(set);
+        }
+
+        Call<MangaResponse> mangaApiCall = apiService.getManga(new String[]{"author", "artist", "cover_art"}, 100, 0, null, null, libraryList.toArray(new String[0]));
+
+        mangaApiCall.enqueue(new Callback<MangaResponse>() {
+            @Override
+            public void onResponse(Call<MangaResponse> call, Response<MangaResponse> response) {
+                if (response.isSuccessful()) {
+                    MangaResponse res = response.body();
+                    manga = res.data;
+                    libraryAdapter = new LibraryRecyclerViewAdapter(context, manga);
+                    recyclerView.setAdapter(libraryAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MangaResponse> call, Throwable t) {
+                Log.e("err", t.toString());
+                Toast.makeText(context, "Unable to fetch manga", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 //    @Override

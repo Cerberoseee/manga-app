@@ -18,7 +18,6 @@ public class RelationshipDeserializer implements JsonDeserializer<Relationship> 
     public Relationship deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
         Relationship relationship = new Relationship();
         JsonObject obj = json.getAsJsonObject();
-
         relationship.id = obj.get("id").getAsString();
 
         String type = obj.get("type").getAsString();

@@ -22,7 +22,8 @@ public interface ApiService {
         @Query("limit") Integer limit,
         @Query("offset") Integer offset,
         @Query("includedTags[]") String[] includeTagId,
-        @Query("contentRating[]") String[] contentRate
+        @Query("contentRating[]") String[] contentRate,
+        @Query("ids[]") String[] includeIds
     );
     @GET("/manga/{id}")
     Call<MangaDetailResponse> getMangaDetail(
