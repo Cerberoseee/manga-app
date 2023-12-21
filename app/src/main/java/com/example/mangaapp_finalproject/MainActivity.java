@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     BottomNavigationView bottomNavigationView;
     androidx.appcompat.widget.Toolbar toolbarMain;
-
     SharedPreferences darkModeSharePref;
     int darkMode;
 

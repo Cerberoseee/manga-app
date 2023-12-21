@@ -23,17 +23,21 @@ public class RelationshipDeserializer implements JsonDeserializer<Relationship> 
         String type = obj.get("type").getAsString();
         relationship.type = type;
 
-        if(Objects.equals(type, "cover_art"))
-            relationship.attribute = new CoverArt(obj.get("attributes").getAsJsonObject().get("fileName").getAsString());
+        if (obj.get("attributes") == null) {
+            relationship.attribute = null;
+        } else {
+            if(Objects.equals(type, "cover_art"))
+                relationship.attribute = new CoverArt(obj.get("attributes").getAsJsonObject().get("fileName").getAsString());
 
-        else if (Objects.equals(type, "artist"))
-            relationship.attribute = new AuthorArtist(obj.get("attributes").getAsJsonObject().get("name").getAsString());
+            else if (Objects.equals(type, "artist"))
+                relationship.attribute = new AuthorArtist(obj.get("attributes").getAsJsonObject().get("name").getAsString());
 
-        else if (Objects.equals(type, "author"))
-            relationship.attribute = new AuthorArtist(obj.get("attributes").getAsJsonObject().get("name").getAsString());
+            else if (Objects.equals(type, "author"))
+                relationship.attribute = new AuthorArtist(obj.get("attributes").getAsJsonObject().get("name").getAsString());
 
-        else if (Objects.equals(type, "scanlation_group"))
-            relationship.attribute = new ScanlationGroup(obj.get("attributes").getAsJsonObject().get("name").getAsString());
+            else if (Objects.equals(type, "scanlation_group"))
+                relationship.attribute = new ScanlationGroup(obj.get("attributes").getAsJsonObject().get("name").getAsString());
+        }
 
         return relationship;
     }

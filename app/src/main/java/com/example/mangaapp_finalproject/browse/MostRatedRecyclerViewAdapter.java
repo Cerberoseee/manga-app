@@ -1,5 +1,6 @@
 package com.example.mangaapp_finalproject.browse;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -13,16 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mangaapp_finalproject.R;
 import com.example.mangaapp_finalproject.api.type.Manga.Manga;
+import com.example.mangaapp_finalproject.api.type.Relationship.CoverArt;
+import com.example.mangaapp_finalproject.api.type.Relationship.Relationship;
 import com.example.mangaapp_finalproject.detail.MangaInfoActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class MostRatedRecyclerViewAdapter extends RecyclerView.Adapter<MostRatedRecyclerViewAdapter.ViewHolder>{
 
     private Context context;
-    private ArrayList<Manga> manga;
+    private Manga[] manga;
 
-    public MostRatedRecyclerViewAdapter(Context context, ArrayList<Manga> manga) {
+    public MostRatedRecyclerViewAdapter(Context context, Manga[] manga) {
         this.context = context;
         this.manga = manga;
     }
@@ -35,14 +39,34 @@ public class MostRatedRecyclerViewAdapter extends RecyclerView.Adapter<MostRated
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MostRatedRecyclerViewAdapter.ViewHolder holder, int position) {
-        holder.ivMangaItem.setImageResource(R.drawable.placeholder_manga);
-        holder.tvMangaItemTitle.setText(R.string.Manga_title);
+    public void onBindViewHolder(@NonNull MostRatedRecyclerViewAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        String coverLink = "";
+
+        Relationship[] relationships = manga[position].relationships;
+        for (int i = 0; i < relationships.length; i++) {
+            if (relationships[i].type.equals("cover_art")) {
+                coverLink = "https://uploads.mangadex.org/covers/" + manga[position].id + "/" + ((CoverArt)relationships[i].attribute).fileName;
+            }
+        }
+
+        if (coverLink != "") {
+            Picasso.get().load(coverLink).into(holder.ivMangaItem);
+        } else {
+            holder.ivMangaItem.setImageResource(R.drawable.solid_grey_svg);
+        }
+        if (manga[position].attributes.title.en != null)
+            holder.tvMangaItemTitle.setText(manga[position].attributes.title.en);
+        else if (manga[position].attributes.title.ja != null) {
+            holder.tvMangaItemTitle.setText(manga[position].attributes.title.ja);
+        } else {
+            holder.tvMangaItemTitle.setText(manga[position].attributes.title.ja_ro);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent (view.getContext(), MangaInfoActivity.class);
+                intent.putExtra("mangaId", manga[position].id);
                 view.getContext().startActivity(intent);
             }
         });
@@ -50,10 +74,10 @@ public class MostRatedRecyclerViewAdapter extends RecyclerView.Adapter<MostRated
 
     @Override
     public int getItemCount() {
-        return 20;
+        return manga.length;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivMangaItem;
         TextView tvMangaItemTitle;
 

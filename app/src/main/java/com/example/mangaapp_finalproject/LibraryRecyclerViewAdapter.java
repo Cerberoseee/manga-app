@@ -1,7 +1,9 @@
 package com.example.mangaapp_finalproject;
 
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +30,7 @@ import com.squareup.picasso.Picasso;
 //import com.example.mangaapp_finalproject.databinding.FragmentLibraryBinding;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,24 +38,27 @@ import retrofit2.Call;
 
 public class LibraryRecyclerViewAdapter extends RecyclerView.Adapter<LibraryRecyclerViewAdapter.ViewHolder> {
 
-    private Context context;
-    private Manga[] manga;
+    private final Context context;
+    private final Manga[] manga;
+    private LibraryFragment fragment;
+    private RecyclerView recyclerView;
 
-    public LibraryRecyclerViewAdapter(Context context, Manga[] manga) {
+    public LibraryRecyclerViewAdapter(Context context, Manga[] manga, LibraryFragment fragment, RecyclerView recyclerView) {
         this.context = context;
         this.manga = manga;
+        this.fragment = fragment;
+        this.recyclerView = recyclerView;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //Inflate the layout(Giving a look to our rows)
 
         View view = LayoutInflater.from(context).inflate(R.layout.fragment_item_row, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         String coverLink = "";
         String artist = "";
         String author = "";
@@ -75,16 +81,37 @@ public class LibraryRecyclerViewAdapter extends RecyclerView.Adapter<LibraryRecy
         } else {
             holder.ivMangaItem.setImageResource(R.drawable.solid_grey_svg);
         }
-
-        holder.tvMangaItemTitle.setText(manga[position].attributes.title.en);
+        if (manga[position].attributes.title.en != null)
+            holder.tvMangaItemTitle.setText(manga[position].attributes.title.en);
+        else if (manga[position].attributes.title.ja != null) {
+            holder.tvMangaItemTitle.setText(manga[position].attributes.title.ja);
+        } else {
+            holder.tvMangaItemTitle.setText(manga[position].attributes.title.ja_ro);
+        }
         holder.tvMangaItemAuthor.setText(author);
         holder.tvMangaItemArtist.setText(artist);
 
         holder.ibtnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //delete manga
-                Toast.makeText(context, "Delete a manga", Toast.LENGTH_SHORT).show();
+                SharedPreferences prefs= context.getSharedPreferences("library",Context.MODE_PRIVATE);
+
+                Set<String> set = prefs.getStringSet("library", null);
+                List<String> libraryList = new ArrayList<>();
+                if (set != null) {
+                    libraryList = new ArrayList<String>(set);
+                }
+
+                SharedPreferences.Editor edit = prefs.edit();
+                libraryList.remove(manga[position].id);
+
+                set = new HashSet<String>();
+                set.addAll(libraryList);
+                edit.putStringSet("library", set);
+                edit.commit();
+
+                Toast.makeText(context, "Manga removed from library!", Toast.LENGTH_SHORT).show();
+                fragment.getManga(context, recyclerView);
             }
         });
         
@@ -92,6 +119,7 @@ public class LibraryRecyclerViewAdapter extends RecyclerView.Adapter<LibraryRecy
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent (view.getContext(), MangaInfoActivity.class);
+                intent.putExtra("mangaId", manga[position].id);
                 view.getContext().startActivity(intent);
             }
         });

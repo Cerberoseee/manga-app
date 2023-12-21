@@ -120,29 +120,40 @@ public class LibraryFragment extends Fragment {
 
         Set<String> set = prefs.getStringSet("library", null);
         List<String> libraryList = new ArrayList<>();
-        if (set != null) {
+        if (set.toArray().length != 0) {
             libraryList = new ArrayList<String>(set);
+            Call<MangaResponse> mangaApiCall = apiService.getManga(
+                    new String[]{"author", "artist", "cover_art"},
+                    100,
+                    0,
+                    null,
+                    null,
+                    libraryList.toArray(new String[0]),
+                    null,
+                    null,
+                    null
+            );
+
+            mangaApiCall.enqueue(new Callback<MangaResponse>() {
+                @Override
+                public void onResponse(Call<MangaResponse> call, Response<MangaResponse> response) {
+                    if (response.isSuccessful()) {
+                        MangaResponse res = response.body();
+                        manga = res.data;
+                        libraryAdapter = new LibraryRecyclerViewAdapter(context, manga, LibraryFragment.this, recyclerView);
+                        recyclerView.setAdapter(libraryAdapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MangaResponse> call, Throwable t) {
+                    Log.e("err", t.toString());
+                    Toast.makeText(context, "Unable to fetch manga", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
-        Call<MangaResponse> mangaApiCall = apiService.getManga(new String[]{"author", "artist", "cover_art"}, 100, 0, null, null, libraryList.toArray(new String[0]));
 
-        mangaApiCall.enqueue(new Callback<MangaResponse>() {
-            @Override
-            public void onResponse(Call<MangaResponse> call, Response<MangaResponse> response) {
-                if (response.isSuccessful()) {
-                    MangaResponse res = response.body();
-                    manga = res.data;
-                    libraryAdapter = new LibraryRecyclerViewAdapter(context, manga);
-                    recyclerView.setAdapter(libraryAdapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MangaResponse> call, Throwable t) {
-                Log.e("err", t.toString());
-                Toast.makeText(context, "Unable to fetch manga", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 //    @Override

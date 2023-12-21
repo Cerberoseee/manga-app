@@ -23,7 +23,10 @@ public interface ApiService {
         @Query("offset") Integer offset,
         @Query("includedTags[]") String[] includeTagId,
         @Query("contentRating[]") String[] contentRate,
-        @Query("ids[]") String[] includeIds
+        @Query("ids[]") String[] includeIds,
+        @Query("order[followedCount]") String orderFollow,
+        @Query("order[rating]") String orderRate,
+        @Query("order[latestUploadedChapter]") String orderNew
     );
     @GET("/manga/{id}")
     Call<MangaDetailResponse> getMangaDetail(
