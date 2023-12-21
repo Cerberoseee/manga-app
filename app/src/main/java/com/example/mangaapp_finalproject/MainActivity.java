@@ -30,12 +30,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String BASE_URL="https://api.mangadex.org/";
     SwipeRefreshLayout swipeLayout;
     ActivityMainBinding binding;
     BottomNavigationView bottomNavigationView;
     androidx.appcompat.widget.Toolbar toolbarMain;
-
     SharedPreferences darkModeSharePref;
     int darkMode;
 

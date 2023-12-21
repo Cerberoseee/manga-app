@@ -19,18 +19,20 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
             android:text="Category"
-            android:textColor="?attr/colorControlNormal" />
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="24sp" />
 
         <HorizontalScrollView
             android:id="@+id/horizontalScrollCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -109,7 +111,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="20dp"
             android:text="Recently Added"
-            android:textColor="?attr/colorControlNormal" />
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="24sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/newestMangaList"
@@ -128,7 +131,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="20dp"
             android:text="Hottest"
-            android:textColor="?attr/colorControlNormal" />
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="24sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/hottestMangaList"
@@ -147,7 +151,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="20dp"
             android:text="Most Rated"
-            android:textColor="?attr/colorControlNormal" />
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="24sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mostRatedMangaList"

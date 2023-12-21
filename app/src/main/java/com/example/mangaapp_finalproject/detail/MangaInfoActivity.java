@@ -251,7 +251,7 @@ public class MangaInfoActivity extends AppCompatActivity {
 
                     Set<String> set = prefs.getStringSet("library", null);
                     List<String> libraryList = new ArrayList<>();
-                    if (set != null) {
+                    if (set.toArray().length != 0) {
                         libraryList = new ArrayList<String>(set);
                     }
 
@@ -270,7 +270,7 @@ public class MangaInfoActivity extends AppCompatActivity {
 
                     Set<String> set = prefs.getStringSet("library", null);
                     List<String> libraryList = new ArrayList<>();
-                    if (set != null) {
+                    if (set.toArray().length != 0) {
                         libraryList = new ArrayList<String>(set);
                     }
 
