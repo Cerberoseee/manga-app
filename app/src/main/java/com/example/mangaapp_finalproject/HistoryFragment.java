@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import com.example.mangaapp_finalproject.placeholder.PlaceholderContent;
+import com.example.mangaapp_finalproject.api.type.Manga.Manga;
+
+import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -26,6 +27,9 @@ public class HistoryFragment extends Fragment {
     private int mColumnCount = 1;
 
     androidx.appcompat.widget.Toolbar toolbarMain;
+
+    ArrayList<Manga> manga = new ArrayList<>();
+    HistoryRecyclerViewAdapter historyAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -70,7 +74,8 @@ public class HistoryFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new HistoryRecyclerViewAdapter(PlaceholderContent.ITEMS));
+            historyAdapter = new HistoryRecyclerViewAdapter(context, manga);
+            recyclerView.setAdapter(historyAdapter);
         }
         return view;
     }

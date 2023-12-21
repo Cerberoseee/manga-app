@@ -115,7 +115,7 @@ public class MangaInfoActivity extends AppCompatActivity {
         }
 
         if (libraryList.contains(mangaId)) {
-            btnMangaAdd.setText("REMOVE FROM LIBRARY");
+            btnMangaAdd.setText("IN LIBRARY");
         } else {
             btnMangaAdd.setText("ADD TO LIBRARY");
         }
@@ -264,7 +264,7 @@ public class MangaInfoActivity extends AppCompatActivity {
                     edit.commit();
                     Toast.makeText(MangaInfoActivity.this, "Manga added to library!", Toast.LENGTH_SHORT).show();
 
-                    btnMangaAdd.setText("REMOVE FROM LIBRARY");
+                    btnMangaAdd.setText("IN LIBRARY");
                 } else {
                     SharedPreferences prefs= MangaInfoActivity.this.getSharedPreferences("library",Context.MODE_PRIVATE);
 

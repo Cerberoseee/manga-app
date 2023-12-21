@@ -9,15 +9,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.example.mangaapp_finalproject.placeholder.PlaceholderContent;
+import com.example.mangaapp_finalproject.api.type.Manga.Manga;
+
+import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -30,7 +29,9 @@ public class LibraryFragment extends Fragment {
     private int mColumnCount = 1;
 
     androidx.appcompat.widget.Toolbar toolbarMain;
-//    SwipeRefreshLayout swipeLayout;
+
+    ArrayList<Manga> manga = new ArrayList<>();
+    LibraryRecyclerViewAdapter libraryAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -66,9 +67,6 @@ public class LibraryFragment extends Fragment {
         toolbarMain = getActivity().findViewById(R.id.toolbarMain);
         toolbarMain.setVisibility(View.VISIBLE);
 
-//        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
-//        swipeLayout.setOnRefreshListener(this);
-
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -78,7 +76,8 @@ public class LibraryFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new LibraryRecyclerViewAdapter(PlaceholderContent.ITEMS));
+            libraryAdapter = new LibraryRecyclerViewAdapter(context, manga);
+            recyclerView.setAdapter(libraryAdapter);
         }
         return view;
     }
