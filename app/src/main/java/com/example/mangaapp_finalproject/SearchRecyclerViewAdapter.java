@@ -18,6 +18,8 @@ import com.example.mangaapp_finalproject.detail.MangaInfoActivity;
 //import com.example.mangaapp_finalproject.placeholder.MangaListContent.PlaceholderItem;
 //import com.example.mangaapp_finalproject.databinding.FragmentHistoryBinding;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -32,6 +34,12 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     public SearchRecyclerViewAdapter(Context context, ArrayList<Manga> manga) {
         this.context = context;
         this.manga = manga;
+    }
+
+    public void filterList(ArrayList<Manga> filterlist) {
+        manga = filterlist;
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -68,7 +76,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     @Override
     public int getItemCount() {
 //        return manga.size();
-        return 10;
+        return 15;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

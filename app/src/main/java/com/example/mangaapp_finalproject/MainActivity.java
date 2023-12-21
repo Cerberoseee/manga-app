@@ -16,9 +16,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.mangaapp_finalproject.api.type.Manga.Manga;
 import com.example.mangaapp_finalproject.browse.BrowseFragment;
 import com.example.mangaapp_finalproject.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeLayout;
@@ -27,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     androidx.appcompat.widget.Toolbar toolbarMain;
     SharedPreferences darkModeSharePref;
     int darkMode;
+
+    Manga[] manga;
+    SearchRecyclerViewAdapter searchAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +47,12 @@ public class MainActivity extends AppCompatActivity {
         toolbarMain = findViewById(R.id.toolbarMain);
         setSupportActionBar(toolbarMain);
 
-        changeFragment(new LibraryFragment());
+        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
+
+        if(currFragment == null){
+            changeFragment(new LibraryFragment());
+        }
+
 
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refreshLayout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -90,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
             } else if (item.getItemId() == R.id.searchItem) {
                 changeFragment(new SearchFragment());
-                toolbarMain.setTitle("History");
+                toolbarMain.setTitle("Search");
 
             } else if (item.getItemId() == R.id.moreItem) {
                 changeFragment(new MoreFragment());
@@ -101,17 +112,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void changeFragment(Fragment fragment){
+        String backStateName = fragment.getClass().getName();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager
-                .beginTransaction()
-                .setCustomAnimations(
-                        R.anim.fade_in,
-                        R.anim.fade_out
-                )
-                .replace(R.id.flMain, fragment);
+        boolean fragmentPopped = fragmentManager.popBackStackImmediate(backStateName, 0);
 
-        fragmentTransaction.commit();
+        if(!fragmentPopped){
+            FragmentTransaction fragmentTransaction = fragmentManager
+                    .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.fade_in,
+                            R.anim.fade_out
+                    )
+                    .replace(R.id.flMain, fragment)
+                    .setReorderingAllowed(true)
+                    .addToBackStack(backStateName);
+
+            fragmentTransaction.commit();
+        }
     }
 
     @Override
@@ -123,16 +141,23 @@ public class MainActivity extends AppCompatActivity {
         androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) menuItem.getActionView();
         searchView.setQueryHint("Search for manga...");
 
+        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
+
         searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Toast.makeText(MainActivity.this, "Search for manga" + s, Toast.LENGTH_SHORT).show();
+
+                if(!(currFragment instanceof SearchFragment)){
+                    changeFragment(new SearchFragment());
+                    bottomNavigationView.setSelectedItemId(R.id.searchItem);
+                }
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                Fragment currFragment = (Fragment)getSupportFragmentManager().findFragmentById(R.id.flMain);
                 if(!(currFragment instanceof SearchFragment)){
                     changeFragment(new SearchFragment());
                     bottomNavigationView.setSelectedItemId(R.id.searchItem);
@@ -145,10 +170,59 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemID =item.getItemId();
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//
+//        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
+//
+//        if(currFragment instanceof LibraryFragment){
+//            bottomNavigationView.setSelectedItemId(R.id.libraryItem);
+//        }
+//        if(currFragment instanceof BrowseFragment){
+//            bottomNavigationView.setSelectedItemId(R.id.browseItem);
+//        }
+//        if(currFragment instanceof SearchFragment){
+//            bottomNavigationView.setSelectedItemId(R.id.searchItem);
+//        }
+//        if(currFragment instanceof MoreFragment){
+//            bottomNavigationView.setSelectedItemId(R.id.moreItem);
+//        }
+//
+//    }
 
-        return super.onOptionsItemSelected(item);
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//
+//        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
+//
+//        if(currFragment instanceof LibraryFragment){
+//            bottomNavigationView.setSelectedItemId(R.id.libraryItem);
+//        }
+//        else if(currFragment instanceof BrowseFragment){
+//            bottomNavigationView.setSelectedItemId(R.id.browseItem);
+//        }
+//        else if(currFragment instanceof SearchFragment){
+//            bottomNavigationView.setSelectedItemId(R.id.searchItem);
+//        }
+//        else if(currFragment instanceof MoreFragment){
+//            bottomNavigationView.setSelectedItemId(R.id.moreItem);
+//        }
+//    }
+
+    private void filter(String text) {
+        ArrayList<Manga> filteredManga = new ArrayList<>();
+
+        for (Manga item : manga) {
+            if (item.attributes.title.toString().toLowerCase().contains(text.toLowerCase())) {
+                filteredManga.add(item);
+            }
+        }
+        if (filteredManga.isEmpty()) {
+            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show();
+        } else {
+            searchAdapter.filterList(filteredManga);
+        }
     }
 }

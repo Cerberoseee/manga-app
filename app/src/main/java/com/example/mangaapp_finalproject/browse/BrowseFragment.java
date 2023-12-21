@@ -14,9 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mangaapp_finalproject.HistoryRecyclerViewAdapter;
-import com.example.mangaapp_finalproject.LibraryFragment;
-import com.example.mangaapp_finalproject.LibraryRecyclerViewAdapter;
 import com.example.mangaapp_finalproject.R;
 import com.example.mangaapp_finalproject.api.ApiService;
 import com.example.mangaapp_finalproject.api.type.Manga.Manga;
