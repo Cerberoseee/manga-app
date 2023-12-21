@@ -15,11 +15,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.mangaapp_finalproject.api.ApiService;
 import com.example.mangaapp_finalproject.api.type.Statistic.StatisticResponse;
+import com.example.mangaapp_finalproject.browse.BrowseFragment;
 import com.example.mangaapp_finalproject.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

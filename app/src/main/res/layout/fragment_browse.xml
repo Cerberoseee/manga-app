@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BrowseFragment">
+    tools:context=".browse.BrowseFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,11 +15,14 @@
             android:id="@+id/tvCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
             android:text="Category"
             android:textColor="?attr/colorControlNormal" />
 
         <HorizontalScrollView
+            android:id="@+id/horizontalScrollCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none">
@@ -27,6 +30,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -95,6 +99,63 @@
 
             </LinearLayout>
         </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/tvNewest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="20dp"
+            android:text="Recently Added"
+            android:textColor="?attr/colorControlNormal" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/newestMangaList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/tvHottest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="20dp"
+            android:text="Hottest"
+            android:textColor="?attr/colorControlNormal" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hottestMangaList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/tvMostRated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="20dp"
+            android:text="Most Rated"
+            android:textColor="?attr/colorControlNormal" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mostRatedMangaList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
