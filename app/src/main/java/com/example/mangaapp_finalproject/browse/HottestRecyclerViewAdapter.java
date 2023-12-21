@@ -7,13 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mangaapp_finalproject.HistoryRecyclerViewAdapter;
-import com.example.mangaapp_finalproject.LibraryRecyclerViewAdapter;
 import com.example.mangaapp_finalproject.R;
 import com.example.mangaapp_finalproject.api.type.Manga.Manga;
 import com.example.mangaapp_finalproject.detail.MangaInfoActivity;

@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +24,12 @@ import java.util.ArrayList;
  * {@link RecyclerView.Adapter} that can display a {@link }.
  * TODO: Replace the implementation with code for your data type.
  */
-public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
+public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecyclerViewAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<Manga> manga;
 
-    public HistoryRecyclerViewAdapter(Context context, ArrayList<Manga> manga) {
+    public SearchRecyclerViewAdapter(Context context, ArrayList<Manga> manga) {
         this.context = context;
         this.manga = manga;
     }

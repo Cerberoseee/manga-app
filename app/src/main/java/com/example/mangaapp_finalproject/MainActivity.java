@@ -11,26 +11,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.mangaapp_finalproject.api.ApiService;
-import com.example.mangaapp_finalproject.api.type.Statistic.StatisticResponse;
 import com.example.mangaapp_finalproject.browse.BrowseFragment;
 import com.example.mangaapp_finalproject.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class MainActivity extends AppCompatActivity {
-    private static final String BASE_URL="https://api.mangadex.org/";
     SwipeRefreshLayout swipeLayout;
     ActivityMainBinding binding;
     BottomNavigationView bottomNavigationView;
@@ -99,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
                 changeFragment(new BrowseFragment());
                 toolbarMain.setTitle("Browse");
 
-            } else if (item.getItemId() == R.id.historyItem) {
-                changeFragment(new HistoryFragment());
+            } else if (item.getItemId() == R.id.searchItem) {
+                changeFragment(new SearchFragment());
                 toolbarMain.setTitle("History");
 
             } else if (item.getItemId() == R.id.moreItem) {
@@ -143,6 +133,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
+                Fragment currFragment = (Fragment)getSupportFragmentManager().findFragmentById(R.id.flMain);
+                if(!(currFragment instanceof SearchFragment)){
+                    changeFragment(new SearchFragment());
+                    bottomNavigationView.setSelectedItemId(R.id.searchItem);
+                }
+
                 return false;
             }
         });

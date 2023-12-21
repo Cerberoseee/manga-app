@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
     android:layout_marginBottom="12dp"
     android:background="?android:attr/selectableItemBackground"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="2dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="2dp">
 
     <ImageView
         android:id="@+id/ivMangaItem"
@@ -18,12 +21,11 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
         android:layout_marginStart="@dimen/text_margin"
-        android:layout_marginEnd="6dp"
         android:layout_marginTop="0dp"
-        >
+        android:layout_marginEnd="6dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvMangaItemTitle"
@@ -36,20 +38,21 @@
             android:textStyle="bold" />
 
         <TextView
-            android:layout_marginTop="6dp"
             android:id="@+id/tvMangaItemAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:hint="@string/Manga_author"
             android:maxLines="2"
-            android:text="@string/Manga_title"
             android:textColor="?attr/colorControlNormal"
             android:textSize="14sp" />
+
         <TextView
             android:id="@+id/tvMangaItemArtist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/Manga_artist"
             android:maxLines="2"
-            android:text="@string/Manga_title"
             android:textColor="?attr/colorControlNormal"
             android:textSize="14sp" />
     </LinearLayout>
@@ -61,6 +64,6 @@
         android:layout_gravity="center"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_delete"
-        android:tint="?attr/colorControlNormal" />
+        app:tint="?attr/colorControlNormal" />
 
 </LinearLayout>

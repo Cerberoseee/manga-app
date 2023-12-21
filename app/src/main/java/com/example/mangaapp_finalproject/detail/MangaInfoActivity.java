@@ -4,12 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -115,9 +118,15 @@ public class MangaInfoActivity extends AppCompatActivity {
         }
 
         if (libraryList.contains(mangaId)) {
-            btnMangaAdd.setText("IN LIBRARY");
+            btnMangaAdd.setText(R.string.Manga_save_btn_selected);
+            btnMangaAdd.setTextColor(getColor(R.color.main_blue));
+            btnMangaAdd.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_book_saved_selected), null, null, null);
+            btnMangaAdd.setBackground(AppCompatResources.getDrawable(this, R.drawable.button_primary_selected));
         } else {
-            btnMangaAdd.setText("ADD TO LIBRARY");
+            btnMangaAdd.setText(R.string.Manga_save_btn);
+            btnMangaAdd.setTextColor(getColor(R.color.white));
+            btnMangaAdd.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_book_saved), null, null, null);
+            btnMangaAdd.setBackground(AppCompatResources.getDrawable(this, R.drawable.button_primary_shape));
         }
 
         Retrofit retrofitRelate = new Retrofit.Builder()
@@ -264,7 +273,11 @@ public class MangaInfoActivity extends AppCompatActivity {
                     edit.commit();
                     Toast.makeText(MangaInfoActivity.this, "Manga added to library!", Toast.LENGTH_SHORT).show();
 
-                    btnMangaAdd.setText("IN LIBRARY");
+                    btnMangaAdd.setText(R.string.Manga_save_btn_selected);
+                    btnMangaAdd.setTextColor(getColor(R.color.main_blue));
+                    btnMangaAdd.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(MangaInfoActivity.this, R.drawable.ic_book_saved_selected), null, null, null);
+                    btnMangaAdd.setBackground(AppCompatResources.getDrawable(MangaInfoActivity.this, R.drawable.button_primary_selected));
+
                 } else {
                     SharedPreferences prefs= MangaInfoActivity.this.getSharedPreferences("library",Context.MODE_PRIVATE);
 
@@ -283,7 +296,10 @@ public class MangaInfoActivity extends AppCompatActivity {
                     edit.commit();
                     Toast.makeText(MangaInfoActivity.this, "Manga removed from library!", Toast.LENGTH_SHORT).show();
 
-                    btnMangaAdd.setText("ADD TO LIBRARY");
+                    btnMangaAdd.setText(R.string.Manga_save_btn);
+                    btnMangaAdd.setTextColor(getColor(R.color.white));
+                    btnMangaAdd.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(MangaInfoActivity.this, R.drawable.ic_book_saved), null, null, null);
+                    btnMangaAdd.setBackground(AppCompatResources.getDrawable(MangaInfoActivity.this, R.drawable.button_primary_shape));
                 }
             }
         });

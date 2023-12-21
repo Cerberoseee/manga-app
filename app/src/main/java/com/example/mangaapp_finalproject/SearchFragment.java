@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * A fragment representing a list of Items.
  */
-public class HistoryFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -29,19 +29,19 @@ public class HistoryFragment extends Fragment {
     androidx.appcompat.widget.Toolbar toolbarMain;
 
     ArrayList<Manga> manga = new ArrayList<>();
-    HistoryRecyclerViewAdapter historyAdapter;
+    SearchRecyclerViewAdapter historyAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public HistoryFragment() {
+    public SearchFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static HistoryFragment newInstance(int columnCount) {
-        HistoryFragment fragment = new HistoryFragment();
+    public static SearchFragment newInstance(int columnCount) {
+        SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -60,7 +60,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_list, container, false);
 
         toolbarMain = getActivity().findViewById(R.id.toolbarMain);
         toolbarMain.setVisibility(View.VISIBLE);
@@ -74,7 +74,7 @@ public class HistoryFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            historyAdapter = new HistoryRecyclerViewAdapter(context, manga);
+            historyAdapter = new SearchRecyclerViewAdapter(context, manga);
             recyclerView.setAdapter(historyAdapter);
         }
         return view;

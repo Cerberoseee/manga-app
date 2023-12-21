@@ -12,9 +12,9 @@
         android:icon="@drawable/ic_browser_nav"
         android:title="Browse" />
     <item
-        android:id="@+id/historyItem"
-        android:icon="@drawable/ic_history_nav"
-        android:title="History" />
+        android:id="@+id/searchItem"
+        android:icon="@drawable/ic_search_action"
+        android:title="Search" />
     <item
         android:id="@+id/moreItem"
         android:icon="@drawable/ic_more_nav"
