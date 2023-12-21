@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
             changeFragment(new LibraryFragment());
         }
 
-
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refreshLayout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -113,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeFragment(Fragment fragment){
         String backStateName = fragment.getClass().getName();
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         boolean fragmentPopped = fragmentManager.popBackStackImmediate(backStateName, 0);
+//        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
 
         if(!fragmentPopped){
             FragmentTransaction fragmentTransaction = fragmentManager
@@ -131,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.commit();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,46 +170,34 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//
-//        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
-//
-//        if(currFragment instanceof LibraryFragment){
-//            bottomNavigationView.setSelectedItemId(R.id.libraryItem);
-//        }
-//        if(currFragment instanceof BrowseFragment){
-//            bottomNavigationView.setSelectedItemId(R.id.browseItem);
-//        }
-//        if(currFragment instanceof SearchFragment){
-//            bottomNavigationView.setSelectedItemId(R.id.searchItem);
-//        }
-//        if(currFragment instanceof MoreFragment){
-//            bottomNavigationView.setSelectedItemId(R.id.moreItem);
-//        }
-//
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        updateNavBar();
+    }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
-//
-//        if(currFragment instanceof LibraryFragment){
-//            bottomNavigationView.setSelectedItemId(R.id.libraryItem);
-//        }
-//        else if(currFragment instanceof BrowseFragment){
-//            bottomNavigationView.setSelectedItemId(R.id.browseItem);
-//        }
-//        else if(currFragment instanceof SearchFragment){
-//            bottomNavigationView.setSelectedItemId(R.id.searchItem);
-//        }
-//        else if(currFragment instanceof MoreFragment){
-//            bottomNavigationView.setSelectedItemId(R.id.moreItem);
-//        }
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        updateNavBar();
+    }
+
+    private void updateNavBar(){
+        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
+
+        if(currFragment instanceof LibraryFragment){
+            bottomNavigationView.setSelectedItemId(R.id.libraryItem);
+        }
+        else if(currFragment instanceof BrowseFragment){
+            bottomNavigationView.setSelectedItemId(R.id.browseItem);
+        }
+        else if(currFragment instanceof SearchFragment){
+            bottomNavigationView.setSelectedItemId(R.id.searchItem);
+        }
+        else if(currFragment instanceof MoreFragment){
+            bottomNavigationView.setSelectedItemId(R.id.moreItem);
+        }
+    }
 
     private void filter(String text) {
         ArrayList<Manga> filteredManga = new ArrayList<>();
