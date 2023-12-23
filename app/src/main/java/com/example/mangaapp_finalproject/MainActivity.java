@@ -30,9 +30,14 @@ public class MainActivity extends AppCompatActivity {
     androidx.appcompat.widget.Toolbar toolbarMain;
     SharedPreferences darkModeSharePref;
     int darkMode;
-
     Manga[] manga;
     SearchRecyclerViewAdapter searchAdapter;
+
+
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    Fragment currFragment;
+    Fragment active;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +52,18 @@ public class MainActivity extends AppCompatActivity {
         toolbarMain = findViewById(R.id.toolbarMain);
         setSupportActionBar(toolbarMain);
 
-        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
+        currFragment = fragmentManager.findFragmentById(R.id.flMain);
+
+        final Fragment libraryFragment = new LibraryFragment();
+        final Fragment browseFragment = new BrowseFragment();
+        final Fragment searchFragment = new SearchFragment();
+        final Fragment moreFragment = new MoreFragment();
 
         if(currFragment == null){
-            changeFragment(new LibraryFragment());
+            addAllFragment(libraryFragment, browseFragment, searchFragment, moreFragment);
+            active = fragmentManager.findFragmentByTag("1");
+//            showFragment(libraryFragment);
+//            changeFragment(new LibraryFragment());
         }
 
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refreshLayout);
@@ -88,47 +101,62 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.libraryItem).setIcon(R.drawable.ic_library_nav);
             menu.findItem(R.id.browseItem).setIcon(R.drawable.ic_browser_nav);
 
+//            hideAllFragment(libraryFragment, browseFragment, searchFragment, moreFragment);
+
             if(item.getItemId() == R.id.libraryItem){
                 item.setIcon(R.drawable.ic_library_nav_selected);
-                changeFragment(new LibraryFragment());
+                changeFragment(fragmentManager.findFragmentByTag("1"), active);
+                active = fragmentManager.findFragmentByTag("1");
                 toolbarMain.setTitle("Library");
 
-            } else if (item.getItemId() == R.id.browseItem) {
+            }
+            else if (item.getItemId() == R.id.browseItem) {
                 item.setIcon(R.drawable.ic_browse_nav_selected);
-                changeFragment(new BrowseFragment());
+                changeFragment(fragmentManager.findFragmentByTag("2"), active);
+                active = fragmentManager.findFragmentByTag("2");
                 toolbarMain.setTitle("Browse");
 
             } else if (item.getItemId() == R.id.searchItem) {
-                changeFragment(new SearchFragment(MainActivity.this));
+                changeFragment(fragmentManager.findFragmentByTag("3"), active);
+                active = fragmentManager.findFragmentByTag("3");
                 toolbarMain.setTitle("Search");
 
             } else if (item.getItemId() == R.id.moreItem) {
-                changeFragment(new MoreFragment());
+                changeFragment(fragmentManager.findFragmentByTag("4"), active);
+                active = fragmentManager.findFragmentByTag("4");
+                toolbarMain.setTitle("More");
             }
 
             return true;
         });
     }
 
-    private void changeFragment(Fragment fragment){
-        String backStateName = fragment.getClass().getName();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        boolean fragmentPopped = fragmentManager.popBackStackImmediate(backStateName, 0);
-//        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
-
-        if(!fragmentPopped){
-            FragmentTransaction fragmentTransaction = fragmentManager
-                    .beginTransaction()
+    private void changeFragment(Fragment fragment, Fragment active){
+        if(fragment.isHidden()) {
+            fragmentManager.beginTransaction()
+                    .hide(active)
                     .setCustomAnimations(
                             R.anim.fade_in,
                             R.anim.fade_out
                     )
-                    .replace(R.id.flMain, fragment)
+                    .show(fragment)
                     .setReorderingAllowed(true)
-                    .addToBackStack(backStateName);
-
-            fragmentTransaction.commit();
+                    .addToBackStack(null)
+                    .commit();
         }
+    }
+
+    private void addAllFragment(Fragment fragment1, Fragment fragment2, Fragment fragment3, Fragment fragment4){
+
+        fragmentManager.beginTransaction()
+                .add(R.id.flMain, fragment4, "4")
+                .hide(fragment4)
+                .add(R.id.flMain, fragment3, "3")
+                .hide(fragment3)
+                .add(R.id.flMain, fragment2, "2")
+                .hide(fragment2)
+                .add(R.id.flMain, fragment1, "1")
+                .commit();
     }
 
 
@@ -173,13 +201,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        updateNavBar();
+        updateNavBar();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        updateNavBar();
+        updateNavBar();
     }
 
     private void updateNavBar(){
