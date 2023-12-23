@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:hint="@string/Manga_author"
+            android:text="@string/Manga_author"
             android:maxLines="2"
             android:textColor="?attr/colorControlNormal"
             android:textSize="14sp" />
@@ -51,7 +51,7 @@
             android:id="@+id/tvMangaItemArtist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/Manga_artist"
+            android:text="@string/Manga_artist"
             android:maxLines="2"
             android:textColor="?attr/colorControlNormal"
             android:textSize="14sp" />

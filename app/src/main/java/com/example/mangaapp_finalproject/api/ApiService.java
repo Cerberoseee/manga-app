@@ -26,7 +26,8 @@ public interface ApiService {
         @Query("ids[]") String[] includeIds,
         @Query("order[followedCount]") String orderFollow,
         @Query("order[rating]") String orderRate,
-        @Query("order[latestUploadedChapter]") String orderNew
+        @Query("order[latestUploadedChapter]") String orderNew,
+        @Query("title") String title
     );
     @GET("/manga/{id}")
     Call<MangaDetailResponse> getMangaDetail(

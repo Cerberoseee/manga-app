@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 toolbarMain.setTitle("Browse");
 
             } else if (item.getItemId() == R.id.searchItem) {
-                changeFragment(new SearchFragment());
+                changeFragment(new SearchFragment(MainActivity.this));
                 toolbarMain.setTitle("Search");
 
             } else if (item.getItemId() == R.id.moreItem) {
@@ -137,35 +137,35 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.maintoolbar_menu, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.actionSearch);
-        androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search for manga...");
-
-        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
-
-        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                Toast.makeText(MainActivity.this, "Search for manga" + s, Toast.LENGTH_SHORT).show();
-
-                if(!(currFragment instanceof SearchFragment)){
-                    changeFragment(new SearchFragment());
-                    bottomNavigationView.setSelectedItemId(R.id.searchItem);
-                }
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if(!(currFragment instanceof SearchFragment)){
-                    changeFragment(new SearchFragment());
-                    bottomNavigationView.setSelectedItemId(R.id.searchItem);
-                }
-
-                return false;
-            }
-        });
+//        MenuItem menuItem = menu.findItem(R.id.actionSearch);
+//        androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) menuItem.getActionView();
+//        searchView.setQueryHint("Search for manga...");
+//
+//        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
+//
+//        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                Toast.makeText(MainActivity.this, "Search for manga" + s, Toast.LENGTH_SHORT).show();
+//
+//                if(!(currFragment instanceof SearchFragment)){
+//                    changeFragment(new SearchFragment());
+//                    bottomNavigationView.setSelectedItemId(R.id.searchItem);
+//                }
+//
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                if(!(currFragment instanceof SearchFragment)){
+//                    changeFragment(new SearchFragment());
+//                    bottomNavigationView.setSelectedItemId(R.id.searchItem);
+//                }
+//
+//                return false;
+//            }
+//        });
 
         return true;
     }
@@ -199,18 +199,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void filter(String text) {
-        ArrayList<Manga> filteredManga = new ArrayList<>();
-
-        for (Manga item : manga) {
-            if (item.attributes.title.toString().toLowerCase().contains(text.toLowerCase())) {
-                filteredManga.add(item);
-            }
-        }
-        if (filteredManga.isEmpty()) {
-            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show();
-        } else {
-            searchAdapter.filterList(filteredManga);
-        }
-    }
+//    private void filter(String text) {
+//        ArrayList<Manga> filteredManga = new ArrayList<>();
+//
+//        for (Manga item : manga) {
+//            if (item.attributes.title.toString().toLowerCase().contains(text.toLowerCase())) {
+//                filteredManga.add(item);
+//            }
+//        }
+//        if (filteredManga.isEmpty()) {
+//            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show();
+//        } else {
+//            searchAdapter.filterList(filteredManga);
+//        }
+//    }
 }

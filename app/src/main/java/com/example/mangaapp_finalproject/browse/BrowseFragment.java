@@ -1,11 +1,13 @@
 package com.example.mangaapp_finalproject.browse;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -35,11 +37,11 @@ public class BrowseFragment extends Fragment {
 
     androidx.appcompat.widget.Toolbar toolbarMain;
     Manga[] manga;
-
     NewestRecyclerViewAdapter newestAdapter;
     HottestRecyclerViewAdapter hottestAdapter;
     MostRatedRecyclerViewAdapter mostRatedAdapter;
     RecyclerView newestMangaList, hottestMangaList, mostRatedMangaList;
+    Button btnAction, btnDrama, btnPsychological, btnComedy, btnRomance, btnSoL;
 
     @Nullable
     @Override
@@ -56,6 +58,19 @@ public class BrowseFragment extends Fragment {
         newestMangaList = view.findViewById(R.id.newestMangaList);
         hottestMangaList = view.findViewById(R.id.hottestMangaList);
         mostRatedMangaList = view.findViewById(R.id.mostRatedMangaList);
+
+        btnAction = view.findViewById(R.id.btnAction);
+        btnDrama = view.findViewById(R.id.btnDrama);
+        btnPsychological = view.findViewById(R.id.btnPsychological);
+        btnComedy = view.findViewById(R.id.btnComedy);
+        btnRomance = view.findViewById(R.id.btnRomance);
+        btnSoL = view.findViewById(R.id.btnSoL);
+
+        btnAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Relationship.class, new RelationshipDeserializer());
@@ -77,7 +92,8 @@ public class BrowseFragment extends Fragment {
                 null,
                 null,
                 null,
-                "desc"
+                "desc",
+                null
         );
 
         mangaApiCall.enqueue(new Callback<MangaResponse>() {
@@ -107,6 +123,7 @@ public class BrowseFragment extends Fragment {
                 new String[]{"safe", "suggestive"},
                 null,
                 "desc",
+                null,
                 null,
                 null
         );
@@ -139,6 +156,7 @@ public class BrowseFragment extends Fragment {
                 null,
                 null,
                 "desc",
+                null,
                 null
         );
 

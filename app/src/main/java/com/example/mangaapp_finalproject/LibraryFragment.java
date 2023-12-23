@@ -131,6 +131,7 @@ public class LibraryFragment extends Fragment {
                     libraryList.toArray(new String[0]),
                     null,
                     null,
+                    null,
                     null
             );
 
