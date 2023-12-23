@@ -18,16 +18,17 @@ import retrofit2.http.Query;
 public interface ApiService {
     @GET("/manga")
     Call<MangaResponse> getManga(
-        @Query("includes[]") String[] includes,
-        @Query("limit") Integer limit,
-        @Query("offset") Integer offset,
-        @Query("includedTags[]") String[] includeTagId,
-        @Query("contentRating[]") String[] contentRate,
-        @Query("ids[]") String[] includeIds,
-        @Query("order[followedCount]") String orderFollow,
-        @Query("order[rating]") String orderRate,
-        @Query("order[latestUploadedChapter]") String orderNew,
-        @Query("title") String title
+            @Query("includes[]") String[] includes,
+            @Query("limit") Integer limit,
+            @Query("offset") Integer offset,
+            @Query("includedTags[]") String[] includeTagId,
+            @Query("contentRating[]") String[] contentRate,
+            @Query("ids[]") String[] includeIds,
+            @Query("order[followedCount]") String orderFollow,
+            @Query("order[rating]") String orderRate,
+            @Query("order[latestUploadedChapter]") String orderNew,
+            @Query("title") String title,
+            @Query("includedTags[]") String[] tag
     );
     @GET("/manga/{id}")
     Call<MangaDetailResponse> getMangaDetail(
@@ -49,7 +50,7 @@ public interface ApiService {
         @Query("order[chapter]") String order
     );
     @GET("/manga/random")
-    Call<MangaResponse> getMangaRandom(
+    Call<MangaDetailResponse> getMangaRandom(
         @Query("includes[]") String[] includes,
         @Query("contentRating[]") String[] contentRate
     );

@@ -132,6 +132,7 @@ public class LibraryFragment extends Fragment {
                     null,
                     null,
                     null,
+                    null,
                     null
             );
 

@@ -134,7 +134,7 @@ public class ReaderActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<ChapterImageResponse> call, @NonNull Response<ChapterImageResponse> response) {
                 if (response.isSuccessful()) {
                     ChapterImageResponse res = response.body();
-                    readerAdapter = new ReaderAdapter(getSupportFragmentManager(), res);
+                    readerAdapter = new ReaderAdapter(getSupportFragmentManager(), res, ReaderActivity.this);
                     reader.setAdapter(readerAdapter);
                     totalPage = res.chapter.data.length;
                     textPageNumber.setText("01/" + String.format("%02d", Integer.valueOf(totalPage)));

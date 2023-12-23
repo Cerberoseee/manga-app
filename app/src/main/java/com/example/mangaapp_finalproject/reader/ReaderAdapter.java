@@ -1,6 +1,7 @@
 package com.example.mangaapp_finalproject.reader;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,19 +14,30 @@ import com.example.mangaapp_finalproject.api.type.Chapter.ChapterImageResponse;
 
 public class ReaderAdapter extends FragmentStatePagerAdapter {
     private ChapterImageResponse chapterPathList;
+    private  Context context;
 
-    public ReaderAdapter(@NonNull FragmentManager fm, ChapterImageResponse chapterPathList) {
+    public ReaderAdapter(@NonNull FragmentManager fm, ChapterImageResponse chapterPathList, Context context) {
         super(fm);
+        this.context = context;
         this.chapterPathList = chapterPathList;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
+        SharedPreferences dataSaverPref =  context.getSharedPreferences("DATA_SAVER", Context.MODE_PRIVATE);
+        boolean dataSaver = dataSaverPref.getBoolean("dataSaver", false);
+
         Bundle bundle = new Bundle();
         bundle.putString("baseUrl", chapterPathList.baseUrl);
         bundle.putString("hash", chapterPathList.chapter.hash);
-        bundle.putString("id", chapterPathList.chapter.data[position]);
+
+        if (!dataSaver) {
+            bundle.putString("id", chapterPathList.chapter.data[position]);
+        } else {
+            bundle.putString("id", chapterPathList.chapter.dataSaver[position]);
+        }
+        bundle.putBoolean("dataSaver", dataSaver);
 
         ChapterImageFragment fragmentObj = new ChapterImageFragment();
         fragmentObj.setArguments(bundle);

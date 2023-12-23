@@ -14,8 +14,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -25,8 +27,9 @@ public class SettingsActivity extends AppCompatActivity {
     TextView tvDarkModeHint;
     ImageView ivDarkMode;
 
-    SharedPreferences darkModeSharePref;
+    SharedPreferences darkModeSharePref, dataSaverPref;
     SharedPreferences.Editor editor;
+    Switch switchDataSaver;
     int darkMode;
     int currentDarkMode;
     int[] selectedIndex = {0};
@@ -42,6 +45,19 @@ public class SettingsActivity extends AppCompatActivity {
 
         tvDarkModeHint = findViewById(R.id.tvDarkModeHint);
         ivDarkMode = findViewById(R.id.ivDarkMode);
+        switchDataSaver = findViewById(R.id.switchDataSaver);
+
+        dataSaverPref = getSharedPreferences("DATA_SAVER", Context.MODE_PRIVATE);
+        boolean dataSaver = dataSaverPref.getBoolean("dataSaver", false);
+        switchDataSaver.setChecked(dataSaver);
+        switchDataSaver.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                editor = dataSaverPref.edit().putBoolean("dataSaver", b);
+                editor.commit();
+            }
+        });
+
 
         darkModeSharePref = getSharedPreferences("DARK_MODE", Context.MODE_PRIVATE);
         selectedIndex[0] = darkModeSharePref.getInt("darkMode", 2);

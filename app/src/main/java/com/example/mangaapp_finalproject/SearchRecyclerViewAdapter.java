@@ -108,8 +108,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
 
     @Override
     public int getItemCount() {
-//        return manga.size();
-        return 15;
+        return manga.length;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

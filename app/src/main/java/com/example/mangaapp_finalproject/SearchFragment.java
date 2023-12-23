@@ -90,23 +90,103 @@ public class SearchFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Relationship.class, new RelationshipDeserializer());
+        Gson gson = gsonBuilder.create();
+
+        Retrofit retrofitRelate = new Retrofit.Builder()
+                .baseUrl("https://api.mangadex.org/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ApiService apiService = retrofitRelate.create(ApiService.class);
+
+        if ( getArguments()!= null) {
+            String filterID = getArguments().getString("filterId");
+            Call<MangaResponse> mangaApiCall = apiService.getManga(
+                    new String[]{"cover_art", "author", "artist"},
+                    20,
+                    0,
+                    null,
+                    new String[]{"safe", "suggestive"},
+                    null,
+                    null,
+                    null,
+                    "desc",
+                    null,
+                    new String[]{filterID}
+            );
+            mangaApiCall.enqueue(new Callback<MangaResponse>() {
+                @Override
+                public void onResponse(Call<MangaResponse> call, Response<MangaResponse> response) {
+                    if (response.isSuccessful()) {
+                        MangaResponse res = response.body();
+                        manga = res.data;
+                        historyAdapter = new SearchRecyclerViewAdapter(context, manga);
+                        recyclerView.setAdapter(historyAdapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MangaResponse> call, Throwable t) {
+                    Log.e("err", t.toString());
+                    Toast.makeText(context, "Unable to fetch manga", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            androidx.appcompat.widget.SearchView searchView = view.findViewById(R.id.searchView);
+            searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    Toast.makeText(context, "Manga searching", Toast.LENGTH_SHORT).show();
+
+                    Call<MangaResponse> mangaApiCall = apiService.getManga(
+                            new String[]{"cover_art", "author", "artist"},
+                            20,
+                            0,
+                            null,
+                            new String[]{"safe", "suggestive"},
+                            null,
+                            null,
+                            null,
+                            "desc",
+                            s,
+                            new String[]{filterID}
+                    );
+                    mangaApiCall.enqueue(new Callback<MangaResponse>() {
+                        @Override
+                        public void onResponse(Call<MangaResponse> call, Response<MangaResponse> response) {
+                            if (response.isSuccessful()) {
+                                MangaResponse res = response.body();
+                                manga = res.data;
+                                historyAdapter = new SearchRecyclerViewAdapter(context, manga);
+                                recyclerView.setAdapter(historyAdapter);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<MangaResponse> call, Throwable t) {
+                            Log.e("err", t.toString());
+                            Toast.makeText(context, "Unable to fetch manga", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
+        }
+
         androidx.appcompat.widget.SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Toast.makeText(context, "Manga searching", Toast.LENGTH_SHORT).show();
-
-
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                gsonBuilder.registerTypeAdapter(Relationship.class, new RelationshipDeserializer());
-                Gson gson = gsonBuilder.create();
-
-                Retrofit retrofitRelate = new Retrofit.Builder()
-                        .baseUrl("https://api.mangadex.org/")
-                        .addConverterFactory(GsonConverterFactory.create(gson))
-                        .build();
-
-                ApiService apiService = retrofitRelate.create(ApiService.class);
 
                 Call<MangaResponse> mangaApiCall = apiService.getManga(
                         new String[]{"cover_art", "author", "artist"},
@@ -118,7 +198,8 @@ public class SearchFragment extends Fragment {
                         null,
                         null,
                         "desc",
-                        s
+                        s,
+                        null
                 );
                 mangaApiCall.enqueue(new Callback<MangaResponse>() {
                     @Override

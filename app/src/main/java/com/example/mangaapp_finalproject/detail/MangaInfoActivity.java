@@ -149,7 +149,13 @@ public class MangaInfoActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<MangaDetailResponse> call,@NonNull Response<MangaDetailResponse> response) {
                 if (response.isSuccessful()) {
                     MangaDetailResponse res = response.body();
-                    mangaName = res.data.attributes.title.en;
+                    if (res.data.attributes.title.en != null) {
+                        mangaName = res.data.attributes.title.en;
+                    } else if (res.data.attributes.title.ja != null) {
+                        mangaName = res.data.attributes.title.ja;
+                    } else if (res.data.attributes.title.ja_ro != null) {
+                        mangaName = res.data.attributes.title.ja_ro;
+                    }
                     tvMangaTitle.setText(mangaName);
                     expTv1.setText(res.data.attributes.description.en);
                     tvMangaStatus.setText("Status: " + res.data.attributes.status.substring(0, 1).toUpperCase() + res.data.attributes.status.substring(1));

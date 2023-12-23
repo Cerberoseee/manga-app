@@ -9,19 +9,31 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.mangaapp_finalproject.api.ApiService;
 import com.example.mangaapp_finalproject.api.type.Manga.Manga;
+import com.example.mangaapp_finalproject.api.type.Manga.MangaDetailResponse;
+import com.example.mangaapp_finalproject.api.type.Manga.MangaResponse;
 import com.example.mangaapp_finalproject.browse.BrowseFragment;
 import com.example.mangaapp_finalproject.databinding.ActivityMainBinding;
+import com.example.mangaapp_finalproject.detail.MangaInfoActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeLayout;
@@ -30,15 +42,18 @@ public class MainActivity extends AppCompatActivity {
     androidx.appcompat.widget.Toolbar toolbarMain;
     SharedPreferences darkModeSharePref;
     int darkMode;
-    Manga[] manga;
-    SearchRecyclerViewAdapter searchAdapter;
-
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment currFragment;
     Fragment active;
-
-
+    enum Screen {
+        Library,
+        Browse,
+        Search,
+        More,
+        Filter
+    }
+    Screen screen = Screen.Library;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,29 +73,60 @@ public class MainActivity extends AppCompatActivity {
         final Fragment browseFragment = new BrowseFragment();
         final Fragment searchFragment = new SearchFragment();
         final Fragment moreFragment = new MoreFragment();
+        final Fragment filterFragment = new SearchFragment();
 
         if(currFragment == null){
-            addAllFragment(libraryFragment, browseFragment, searchFragment, moreFragment);
+            addAllFragment(libraryFragment, browseFragment, searchFragment, moreFragment, filterFragment);
             active = fragmentManager.findFragmentByTag("1");
-//            showFragment(libraryFragment);
-//            changeFragment(new LibraryFragment());
         }
 
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refreshLayout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Toast.makeText(MainActivity.this, "refreshing...", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Refreshing list...", Toast.LENGTH_SHORT).show();
                 swipeLayout.setRefreshing(false);
 
                 //refresh stuff here
 
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        swipeLayout.setRefreshing(false);
-//                    }
-//                }, 2000);
+                if(screen == Screen.Library) {
+                    Fragment fragment = new LibraryFragment();
+                    fragmentManager.beginTransaction()
+                            .detach(fragmentManager.findFragmentByTag("1"))
+                            .add(R.id.flMain, fragment, "1")
+                            .commit();
+                    active = fragment;
+                }
+
+                if(screen == Screen.Browse) {
+                    Fragment fragment = new BrowseFragment();
+                    fragmentManager.beginTransaction()
+                            .remove(fragmentManager.findFragmentByTag("2"))
+                            .add(R.id.flMain, fragment, "2")
+                            .commit();
+                    active = fragment;
+                }
+                if(screen == Screen.Search) {
+                    Fragment fragment = new SearchFragment();
+                    fragmentManager.beginTransaction()
+                            .remove(fragmentManager.findFragmentByTag("3"))
+                            .add(R.id.flMain, fragment, "3")
+                            .commit();
+                    active = fragment;
+                }
+                if(screen == Screen.Filter) {
+                    Fragment fragment = new SearchFragment();
+                    String filterId = fragmentManager.findFragmentByTag("5").getArguments().getString("filterId");
+                    Bundle bundle = new Bundle();
+                    bundle.putString("filterId", filterId);
+                    fragment.setArguments(bundle);
+
+                    fragmentManager.beginTransaction()
+                            .remove(fragmentManager.findFragmentByTag("5"))
+                            .add(R.id.flMain, fragment, "5")
+                            .commit();
+                    active = fragment;
+                }
             }
 
         });
@@ -108,23 +154,24 @@ public class MainActivity extends AppCompatActivity {
                 changeFragment(fragmentManager.findFragmentByTag("1"), active);
                 active = fragmentManager.findFragmentByTag("1");
                 toolbarMain.setTitle("Library");
-
+                screen = Screen.Library;
             }
             else if (item.getItemId() == R.id.browseItem) {
                 item.setIcon(R.drawable.ic_browse_nav_selected);
                 changeFragment(fragmentManager.findFragmentByTag("2"), active);
                 active = fragmentManager.findFragmentByTag("2");
                 toolbarMain.setTitle("Browse");
-
+                screen = Screen.Browse;
             } else if (item.getItemId() == R.id.searchItem) {
                 changeFragment(fragmentManager.findFragmentByTag("3"), active);
                 active = fragmentManager.findFragmentByTag("3");
                 toolbarMain.setTitle("Search");
-
+                screen = Screen.Search;
             } else if (item.getItemId() == R.id.moreItem) {
                 changeFragment(fragmentManager.findFragmentByTag("4"), active);
                 active = fragmentManager.findFragmentByTag("4");
                 toolbarMain.setTitle("More");
+                screen = Screen.More;
             }
 
             return true;
@@ -141,14 +188,41 @@ public class MainActivity extends AppCompatActivity {
                     )
                     .show(fragment)
                     .setReorderingAllowed(true)
-                    .addToBackStack(null)
+                    .addToBackStack(fragment.getTag())
                     .commit();
         }
     }
 
-    private void addAllFragment(Fragment fragment1, Fragment fragment2, Fragment fragment3, Fragment fragment4){
+
+    public void filterManga(String id, String name) {
+        screen = Screen.Filter;
+        Bundle bundle = new Bundle();
+        bundle.putString("filterId", id);
+        Fragment fragment = new SearchFragment();
+        fragment.setArguments(bundle);
 
         fragmentManager.beginTransaction()
+                .hide(active)
+                .setCustomAnimations(
+                        R.anim.fade_in,
+                        R.anim.fade_out
+                )
+                .remove(fragmentManager.findFragmentByTag("5"))
+                .add(R.id.flMain, fragment, "5")
+                .show(fragment)
+                .setReorderingAllowed(true)
+                .addToBackStack(fragment.getTag())
+                .commit();
+
+        active = fragment;
+        toolbarMain.setTitle("Filter: " + name);
+    }
+
+    private void addAllFragment(Fragment fragment1, Fragment fragment2, Fragment fragment3, Fragment fragment4, Fragment fragment5){
+
+        fragmentManager.beginTransaction()
+                .add(R.id.flMain, fragment5, "5")
+                .hide(fragment5)
                 .add(R.id.flMain, fragment4, "4")
                 .hide(fragment4)
                 .add(R.id.flMain, fragment3, "3")
@@ -165,43 +239,52 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.maintoolbar_menu, menu);
 
-//        MenuItem menuItem = menu.findItem(R.id.actionSearch);
-//        androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) menuItem.getActionView();
-//        searchView.setQueryHint("Search for manga...");
-//
-//        Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.flMain);
-//
-//        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String s) {
-//                Toast.makeText(MainActivity.this, "Search for manga" + s, Toast.LENGTH_SHORT).show();
-//
-//                if(!(currFragment instanceof SearchFragment)){
-//                    changeFragment(new SearchFragment());
-//                    bottomNavigationView.setSelectedItemId(R.id.searchItem);
-//                }
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String s) {
-//                if(!(currFragment instanceof SearchFragment)){
-//                    changeFragment(new SearchFragment());
-//                    bottomNavigationView.setSelectedItemId(R.id.searchItem);
-//                }
-//
-//                return false;
-//            }
-//        });
-
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.itemRandom) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://api.mangadex.org/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            ApiService apiService = retrofit.create(ApiService.class);
+            Call<MangaDetailResponse> mangaCall = apiService.getMangaRandom(null, new String[] {"safe", "suggestive"});
+            mangaCall.enqueue(new Callback<MangaDetailResponse>() {
+                @Override
+                public void onResponse(Call<MangaDetailResponse> call, Response<MangaDetailResponse> response) {
+                    if (response.isSuccessful()) {
+                        MangaDetailResponse res = response.body();
+                        Intent intent = new Intent(MainActivity.this, MangaInfoActivity.class);
+                        intent.putExtra("mangaId", res.data.id);
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MangaDetailResponse> call, Throwable t) {
+
+                }
+            });
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         updateNavBar();
+        fragmentManager.beginTransaction()
+                .hide(fragmentManager.findFragmentByTag("5"))
+                .hide(fragmentManager.findFragmentByTag("4"))
+                .hide(fragmentManager.findFragmentByTag("3"))
+                .hide(fragmentManager.findFragmentByTag("2"))
+                .show(fragmentManager.findFragmentByTag("1"))
+                .commit();
+        active = fragmentManager.findFragmentByTag("1");
+        screen = Screen.Library;
+        bottomNavigationView.setSelectedItemId(R.id.libraryItem);
     }
 
     @Override

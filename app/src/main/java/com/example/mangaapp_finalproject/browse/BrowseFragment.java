@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mangaapp_finalproject.MainActivity;
 import com.example.mangaapp_finalproject.R;
 import com.example.mangaapp_finalproject.api.ApiService;
 import com.example.mangaapp_finalproject.api.type.Manga.Manga;
@@ -69,6 +70,42 @@ public class BrowseFragment extends Fragment {
         btnAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((MainActivity)context).filterManga("391b0423-d847-456f-aff0-8b0cfc03066b", "Action");
+            }
+        });
+
+        btnDrama.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)context).filterManga("b9af3a63-f058-46de-a9a0-e0c13906197a", "Drama");
+            }
+        });
+
+        btnPsychological.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)context).filterManga("3b60b75c-a2d7-4860-ab56-05f391bb889c", "Psychological");
+            }
+        });
+
+        btnComedy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)context).filterManga("4d32cc48-9f00-4cca-9b5a-a839f0764984", "Comedy");
+            }
+        });
+
+        btnRomance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)context).filterManga("423e2eae-a7a2-4a8b-ac03-a8351462d71d", "Romance");
+            }
+        });
+
+        btnSoL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)context).filterManga("e5301a23-ebd9-49dd-a0cb-2add944c7fe9", "Slice of Life");
             }
         });
 
@@ -93,6 +130,7 @@ public class BrowseFragment extends Fragment {
                 null,
                 null,
                 "desc",
+                null,
                 null
         );
 
@@ -123,6 +161,7 @@ public class BrowseFragment extends Fragment {
                 new String[]{"safe", "suggestive"},
                 null,
                 "desc",
+                null,
                 null,
                 null,
                 null
@@ -156,6 +195,7 @@ public class BrowseFragment extends Fragment {
                 null,
                 null,
                 "desc",
+                null,
                 null,
                 null
         );
