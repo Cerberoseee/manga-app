@@ -120,7 +120,7 @@ public class LibraryFragment extends Fragment {
 
         Set<String> set = prefs.getStringSet("library", null);
         List<String> libraryList = new ArrayList<>();
-        if (set.toArray().length != 0) {
+        if (set != null) {
             libraryList = new ArrayList<String>(set);
             Call<MangaResponse> mangaApiCall = apiService.getManga(
                     new String[]{"author", "artist", "cover_art"},

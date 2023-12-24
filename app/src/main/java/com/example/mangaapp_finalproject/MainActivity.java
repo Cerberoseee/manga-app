@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void changeFragment(Fragment fragment, Fragment active){
-        if(fragment.isHidden()) {
+        if(fragment.isHidden() && active != null) {
             fragmentManager.beginTransaction()
                     .hide(active)
                     .setCustomAnimations(
@@ -190,6 +190,19 @@ public class MainActivity extends AppCompatActivity {
                     .setReorderingAllowed(true)
                     .addToBackStack(fragment.getTag())
                     .commit();
+        } else if (active == null) {
+            this.active = fragmentManager.findFragmentByTag("4");
+            fragmentManager.beginTransaction()
+                    .hide(this.active)
+                    .setCustomAnimations(
+                            R.anim.fade_in,
+                            R.anim.fade_out
+                    )
+                    .show(fragment)
+                    .setReorderingAllowed(true)
+                    .addToBackStack(fragment.getTag())
+                    .commit();
+            screen = Screen.Library;
         }
     }
 
