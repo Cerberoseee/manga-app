@@ -110,7 +110,13 @@ public class MoreFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+        layoutAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CreditActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 }

@@ -336,11 +336,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void onBackPressedFragment(){
         if(fragmentManager.findFragmentByTag("1").isVisible()){
-            Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
             finish();
         }
         else if(fragmentManager.findFragmentByTag("2").isVisible()){
-            Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
 
             bottomNavigationView.setSelectedItemId(R.id.libraryItem);
             fragmentManager.beginTransaction()
@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
             screen = Screen.Library;
         }
         else if(fragmentManager.findFragmentByTag("3").isVisible()){
-            Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
 
             bottomNavigationView.setSelectedItemId(R.id.browseItem);
             fragmentManager.beginTransaction()
@@ -370,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
             screen = Screen.Browse;
         }
         else if(fragmentManager.findFragmentByTag("4").isVisible()){
-            Toast.makeText(this, "4", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "4", Toast.LENGTH_SHORT).show();
 
             bottomNavigationView.setSelectedItemId(R.id.searchItem);
             fragmentManager.beginTransaction()
