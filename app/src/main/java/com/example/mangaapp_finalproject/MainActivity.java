@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         Filter
     }
     Screen screen = Screen.Library;
+    long backPressedTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             addAllFragment(libraryFragment, browseFragment, searchFragment, moreFragment, filterFragment);
             active = fragmentManager.findFragmentByTag("1");
         }
+//        updateNavBar();
 
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refreshLayout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -188,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                     )
                     .show(fragment)
                     .setReorderingAllowed(true)
-                    .addToBackStack(fragment.getTag())
+                    .addToBackStack(null)
                     .commit();
         } else if (active == null) {
             this.active = fragmentManager.findFragmentByTag("4");
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                     )
                     .show(fragment)
                     .setReorderingAllowed(true)
-                    .addToBackStack(fragment.getTag())
+                    .addToBackStack(null)
                     .commit();
             screen = Screen.Library;
         }
@@ -224,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                 .add(R.id.flMain, fragment, "5")
                 .show(fragment)
                 .setReorderingAllowed(true)
-                .addToBackStack(fragment.getTag())
+                .addToBackStack(null)
                 .commit();
 
         active = fragment;
@@ -286,18 +288,27 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        updateNavBar();
-        fragmentManager.beginTransaction()
-                .hide(fragmentManager.findFragmentByTag("5"))
-                .hide(fragmentManager.findFragmentByTag("4"))
-                .hide(fragmentManager.findFragmentByTag("3"))
-                .hide(fragmentManager.findFragmentByTag("2"))
-                .show(fragmentManager.findFragmentByTag("1"))
-                .commit();
-        active = fragmentManager.findFragmentByTag("1");
-        screen = Screen.Library;
-        bottomNavigationView.setSelectedItemId(R.id.libraryItem);
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            Log.i("MainActivity", "popping backstack");
+            fragmentManager.popBackStack();
+            onBackPressedFragment();
+
+        } else {
+            Log.i("MainActivity", "nothing on backstack, calling super");
+            super.onBackPressed();
+        }
+//        fragmentManager.popBackStack();
+//        updateNavBar();
+//        fragmentManager.beginTransaction()
+//                .hide(fragmentManager.findFragmentByTag("5"))
+//                .hide(fragmentManager.findFragmentByTag("4"))
+//                .hide(fragmentManager.findFragmentByTag("3"))
+//                .hide(fragmentManager.findFragmentByTag("2"))
+//                .show(fragmentManager.findFragmentByTag("1"))
+//                .commit();
+//        active = fragmentManager.findFragmentByTag("1");
+//        screen = Screen.Library;
+//        bottomNavigationView.setSelectedItemId(R.id.libraryItem);
     }
 
     @Override
@@ -320,6 +331,71 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(currFragment instanceof MoreFragment){
             bottomNavigationView.setSelectedItemId(R.id.moreItem);
+        }
+    }
+
+    private void onBackPressedFragment(){
+        if(fragmentManager.findFragmentByTag("1").isVisible()){
+            Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        else if(fragmentManager.findFragmentByTag("2").isVisible()){
+            Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
+
+            bottomNavigationView.setSelectedItemId(R.id.libraryItem);
+            fragmentManager.beginTransaction()
+                    .hide(fragmentManager.findFragmentByTag("5"))
+                    .hide(fragmentManager.findFragmentByTag("4"))
+                    .hide(fragmentManager.findFragmentByTag("3"))
+                    .hide(fragmentManager.findFragmentByTag("2"))
+                    .show(fragmentManager.findFragmentByTag("1"))
+                    .commit();
+            active = fragmentManager.findFragmentByTag("1");
+            toolbarMain.setTitle("Library");
+            screen = Screen.Library;
+        }
+        else if(fragmentManager.findFragmentByTag("3").isVisible()){
+            Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
+
+            bottomNavigationView.setSelectedItemId(R.id.browseItem);
+            fragmentManager.beginTransaction()
+                    .hide(fragmentManager.findFragmentByTag("5"))
+                    .hide(fragmentManager.findFragmentByTag("4"))
+                    .hide(fragmentManager.findFragmentByTag("3"))
+                    .show(fragmentManager.findFragmentByTag("2"))
+                    .hide(fragmentManager.findFragmentByTag("1"))
+                    .commit();
+            active = fragmentManager.findFragmentByTag("2");
+            toolbarMain.setTitle("Browse");
+            screen = Screen.Browse;
+        }
+        else if(fragmentManager.findFragmentByTag("4").isVisible()){
+            Toast.makeText(this, "4", Toast.LENGTH_SHORT).show();
+
+            bottomNavigationView.setSelectedItemId(R.id.searchItem);
+            fragmentManager.beginTransaction()
+                    .hide(fragmentManager.findFragmentByTag("5"))
+                    .hide(fragmentManager.findFragmentByTag("4"))
+                    .show(fragmentManager.findFragmentByTag("3"))
+                    .hide(fragmentManager.findFragmentByTag("2"))
+                    .hide(fragmentManager.findFragmentByTag("1"))
+                    .commit();
+            active = fragmentManager.findFragmentByTag("3");
+            toolbarMain.setTitle("Search");
+            screen = Screen.Search;
+        }
+        else if (fragmentManager.findFragmentByTag("5").isVisible()) {
+            bottomNavigationView.setSelectedItemId(R.id.browseItem);
+            fragmentManager.beginTransaction()
+                    .hide(fragmentManager.findFragmentByTag("5"))
+                    .hide(fragmentManager.findFragmentByTag("4"))
+                    .hide(fragmentManager.findFragmentByTag("3"))
+                    .show(fragmentManager.findFragmentByTag("2"))
+                    .hide(fragmentManager.findFragmentByTag("1"))
+                    .commit();
+            active = fragmentManager.findFragmentByTag("2");
+            toolbarMain.setTitle("Browse");
+            screen = Screen.Browse;
         }
     }
 
