@@ -68,8 +68,10 @@ public class MangaInfoActivity extends AppCompatActivity {
     TextView tvMangaTitle, tvMangaAuthor, tvMangaArtist, tvMangaStatus, tvMangaRating, tvChapterList;
     ImageView ivMangaView;
     String mangaId = "5b93fa0f-0640-49b8-974e-954b9959929b", mangaName = "";
-    Button btnMangaWebview, btnLangFilter, btnMangaAdd;
+    Button btnMangaWebview, btnLangFilter, btnMangaAdd, btnResume;
     Resources resources;
+    int language;
+    SharedPreferences languagePref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,7 @@ public class MangaInfoActivity extends AppCompatActivity {
         btnMangaWebview = findViewById(R.id.btnMangaWebview);
         btnLangFilter = findViewById(R.id.btnLangFilter);
         btnMangaAdd = findViewById(R.id.btnMangaAdd);
+        btnResume = findViewById(R.id.btnResume);
 
         ivMangaView = findViewById(R.id.ivMangaView);
 
@@ -105,11 +108,14 @@ public class MangaInfoActivity extends AppCompatActivity {
             mangaId = getIntent().getStringExtra("mangaId");
         }
 
+        languagePref = MangaInfoActivity.this.getSharedPreferences("LANGUAGE", Context.MODE_PRIVATE);
+        language = languagePref.getInt("language", 0);
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Relationship.class, new RelationshipDeserializer());
         Gson gson = gsonBuilder.create();
 
-        SharedPreferences prefs= MangaInfoActivity.this.getSharedPreferences("library",Context.MODE_PRIVATE);
+        SharedPreferences prefs = MangaInfoActivity.this.getSharedPreferences("library",Context.MODE_PRIVATE);
 
         Set<String> set = prefs.getStringSet("library", null);
         List<String> libraryList = new ArrayList<>();
@@ -127,6 +133,14 @@ public class MangaInfoActivity extends AppCompatActivity {
             btnMangaAdd.setTextColor(getColor(R.color.white));
             btnMangaAdd.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_book_saved), null, null, null);
             btnMangaAdd.setBackground(AppCompatResources.getDrawable(this, R.drawable.button_primary_shape));
+        }
+
+        prefs = MangaInfoActivity.this.getSharedPreferences("chapter", Context.MODE_PRIVATE);
+
+        String savedChapterId = prefs.getString("savedChapter" + mangaId, null);
+
+        if (savedChapterId == null) {
+            btnResume.setVisibility(View.GONE);
         }
 
         Retrofit retrofitRelate = new Retrofit.Builder()
@@ -183,7 +197,15 @@ public class MangaInfoActivity extends AppCompatActivity {
                 Toast.makeText(MangaInfoActivity.this, "Unable to get manga info", Toast.LENGTH_SHORT).show();
             }
         });
-        getChapter(apiRelateService, new String[]{"en"});
+        String[] lang = new String[]{"en"};
+
+        if (language == 1) {
+            lang = new String[]{"vi"};
+        } else if (language == 2) {
+            lang = new String[]{"ja", "ja-ro"};
+        }
+
+        getChapter(apiRelateService, lang);
         ratingCall.enqueue(new Callback<StatisticResponse>() {
             @Override
             public void onResponse(Call<StatisticResponse> call, Response<StatisticResponse> response) {
@@ -218,6 +240,24 @@ public class MangaInfoActivity extends AppCompatActivity {
             }
         });
 
+        btnResume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MangaInfoActivity.this, ReaderActivity.class);
+                ArrayList<String> chapterList = new ArrayList<String>();
+                for (int j = 0; j < data.length; j++) {
+                    chapterList.add(data[j].id);
+                }
+
+                intent.putExtra("id", savedChapterId);
+                intent.putExtra("mangaId", mangaId);
+                intent.putExtra("chapterList", chapterList.toArray(new String[0]));
+                intent.putExtra("mangaName", mangaName);
+
+                startActivity(intent);
+            }
+        });
+
         btnMangaWebview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,14 +273,17 @@ public class MangaInfoActivity extends AppCompatActivity {
 
                 String[] items = new String[]{"English", "Vietnamese", "Japanese"};
                 builder.setTitle("Filtered by Language");
-
-                builder.setSingleChoiceItems(items,  -1, new DialogInterface.OnClickListener() {
+                SharedPreferences.Editor editor = languagePref.edit();
+                builder.setSingleChoiceItems(items,  language, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int i) {
                         if (i == 0) {
+                            editor.putInt("language", 0).apply();
                             getChapter(apiRelateService, new String[]{"en"});
                         } else if (i == 1) {
+                            editor.putInt("language", 1).apply();
                             getChapter(apiRelateService, new String[]{"vi"});
                         } else if (i == 2) {
+                            editor.putInt("language", 2).apply();
                             getChapter(apiRelateService, new String[]{"ja", "ja-ro"});
                         }
                     }

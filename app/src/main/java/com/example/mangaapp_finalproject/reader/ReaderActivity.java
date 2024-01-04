@@ -8,7 +8,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -33,6 +35,7 @@ import com.example.mangaapp_finalproject.api.type.Chapter.ChapterDetailResponse;
 import com.example.mangaapp_finalproject.api.type.Chapter.ChapterImageResponse;
 import com.example.mangaapp_finalproject.api.type.Relationship.Relationship;
 import com.example.mangaapp_finalproject.api.type.Relationship.RelationshipDeserializer;
+import com.example.mangaapp_finalproject.detail.MangaInfoActivity;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -106,6 +109,12 @@ public class ReaderActivity extends AppCompatActivity {
         toolbarReader.setSubtitle(chapterName);
 
         btnNextChap.setVisibility(View.GONE);
+
+        SharedPreferences prefs = ReaderActivity.this.getSharedPreferences("chapter", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = prefs.edit();
+
+        edit.putString("savedChapter" + mangaId, id);
+        edit.commit();
 
         int pos = Arrays.asList(chapterList).indexOf(id);
         if (pos > 0) {
@@ -253,7 +262,9 @@ public class ReaderActivity extends AppCompatActivity {
                 intent.putExtra("mangaId", mangaId);
                 intent.putExtra("mangaName", mangaName);
 
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                ReaderActivity.this.finish();
             }
         });
         btnPrevChap.setOnClickListener(new View.OnClickListener() {
@@ -265,7 +276,9 @@ public class ReaderActivity extends AppCompatActivity {
                 intent.putExtra("mangaId", mangaId);
                 intent.putExtra("mangaName", mangaName);
 
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                ReaderActivity.this.finish();
             }
         });
 

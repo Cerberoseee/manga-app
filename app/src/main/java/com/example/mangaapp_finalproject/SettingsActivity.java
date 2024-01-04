@@ -23,16 +23,15 @@ import android.widget.TextView;
 public class SettingsActivity extends AppCompatActivity {
 
     androidx.appcompat.widget.Toolbar toolbarSettings;
-    LinearLayout layoutDarkMode;
-    TextView tvDarkModeHint;
+    LinearLayout layoutDarkMode, layoutLanguage;
+    TextView tvDarkModeHint, tvLanguage;
     ImageView ivDarkMode;
-
-    SharedPreferences darkModeSharePref, dataSaverPref;
+    SharedPreferences darkModeSharePref, dataSaverPref, languagePref;
     SharedPreferences.Editor editor;
     Switch switchDataSaver;
     int darkMode;
     int currentDarkMode;
-    int[] selectedIndex = {0};
+    int[] selectedIndex = {0, 0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +45,8 @@ public class SettingsActivity extends AppCompatActivity {
         tvDarkModeHint = findViewById(R.id.tvDarkModeHint);
         ivDarkMode = findViewById(R.id.ivDarkMode);
         switchDataSaver = findViewById(R.id.switchDataSaver);
+        layoutLanguage = findViewById(R.id.layoutLanguage);
+        tvLanguage = findViewById(R.id.tvLanguageHint);
 
         dataSaverPref = getSharedPreferences("DATA_SAVER", Context.MODE_PRIVATE);
         boolean dataSaver = dataSaverPref.getBoolean("dataSaver", false);
@@ -57,7 +58,6 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.commit();
             }
         });
-
 
         darkModeSharePref = getSharedPreferences("DARK_MODE", Context.MODE_PRIVATE);
         selectedIndex[0] = darkModeSharePref.getInt("darkMode", 2);
@@ -96,6 +96,18 @@ public class SettingsActivity extends AppCompatActivity {
                 setChoiceDialog(selectedIndex);
             }
         });
+
+        languagePref = getSharedPreferences("LANGUAGE", Context.MODE_PRIVATE);
+        selectedIndex[1] = languagePref.getInt("language", 0);
+
+        String[] lang = new String[]{"English", "Vietnamese", "Japanese"};
+        tvLanguage.setHint(lang[selectedIndex[1]]);
+        layoutLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setLanguageDialog(selectedIndex);
+            }
+        });
     }
 
     @Override
@@ -107,7 +119,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemID =item.getItemId();
+        int itemID = item.getItemId();
         if (itemID == android.R.id.home) {
             finish();
         }
@@ -174,5 +186,43 @@ public class SettingsActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void setLanguageDialog(int[] selectedIndex){
+        String[] optionList = {"English", "Vietnamese", "Japanese"};
 
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Change Language");
+        builder.setSingleChoiceItems(optionList, selectedIndex[1], new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                selectedIndex[1] = i;
+
+                switch(optionList[i]) {
+                    case "English":
+                        tvLanguage.setHint("English");
+                        editor = languagePref
+                                .edit()
+                                .putInt("language", 0);
+                        break;
+                    case "Vietnamese":
+                        tvLanguage.setHint("Vietnamese");
+                        editor = languagePref
+                                .edit()
+                                .putInt("language", 1);
+                        break;
+                    case "Japanese":
+                        tvLanguage.setHint("Japanese");
+                        editor = languagePref
+                                .edit()
+                                .putInt("language", 2);
+                        break;
+                }
+                editor.apply();
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 }

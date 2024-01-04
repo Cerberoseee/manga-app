@@ -17,188 +17,205 @@
         app:menu="@menu/mangainfo_menu"
         app:title="Detail Manga" />
 
-    <androidx.core.widget.NestedScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/layoutMangaInfo"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="38dp"
-            android:orientation="vertical">
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
+                android:id="@+id/layoutMangaInfo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginBottom="12dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/ivMangaView"
-                    android:layout_width="120dp"
-                    android:layout_height="180dp"
-                    android:layout_marginEnd="16dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/solid_grey_svg" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="38dp"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginStart="18dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tvMangaTitle"
+                    <ImageView
+                        android:id="@+id/ivMangaView"
+                        android:layout_width="120dp"
+                        android:layout_height="180dp"
+                        android:layout_marginEnd="16dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/solid_grey_svg" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/colorControlNormal"
-                        android:textSize="26sp" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvMangaAuthor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:textColor="@color/hint" />
+                        <TextView
+                            android:id="@+id/tvMangaTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorControlNormal"
+                            android:textSize="26sp" />
 
-                    <TextView
-                        android:id="@+id/tvMangaArtist"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/hint" />
+                        <TextView
+                            android:id="@+id/tvMangaAuthor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:textColor="@color/hint" />
 
-                    <TextView
-                        android:id="@+id/tvMangaStatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/hint" />
+                        <TextView
+                            android:id="@+id/tvMangaArtist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/hint" />
 
-                    <TextView
-                        android:id="@+id/tvMangaRating"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:drawableStart="@drawable/ic_rating_star"
-                        android:drawablePadding="6dp"
-                        android:textColor="@color/rating"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvMangaStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/hint" />
+
+                        <TextView
+                            android:id="@+id/tvMangaRating"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:drawableStart="@drawable/ic_rating_star"
+                            android:drawablePadding="6dp"
+                            android:textColor="@color/rating"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="26dp"
-                android:layout_marginEnd="26dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btnMangaAdd"
-                    android:layout_width="160dp"
-                    android:layout_height="42dp"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_primary_shape"
-                    android:drawableStart="@drawable/ic_book_saved"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:text="@string/Manga_save_btn"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/btnMangaWebview"
-                    android:layout_width="160dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="right"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_primary_shape"
-                    android:drawableStart="@drawable/ic_browser_nav"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:text="@string/Manga_web_btn"
-                    android:textColor="@color/white" />
-            </LinearLayout>
-
-            <com.ms.square.android.expandabletextview.ExpandableTextView
-                android:id="@+id/expand_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="18dp"
-                app:animAlphaStart="1"
-                app:animDuration="200"
-                app:maxCollapsedLines="3">
-
-                <TextView
-                    android:id="@id/expandable_text"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/About_desc"
-                    android:textColor="@color/hint"
-                    android:textSize="16sp" />
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@id/expand_collapse"
-                    android:layout_width="wrap_content"
+                    <Button
+                        android:id="@+id/btnMangaAdd"
+                        android:layout_width="160dp"
+                        android:layout_height="42dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_primary_shape"
+                        android:textColor="@color/white"
+                        android:drawableStart="@drawable/ic_book_saved"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:text="@string/Manga_save_btn" />
+
+                    <Button
+                        android:id="@+id/btnMangaWebview"
+                        android:layout_width="160dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="right"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_primary_shape"
+                        android:drawableStart="@drawable/ic_browser_nav"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:text="@string/Manga_web_btn"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <com.ms.square.android.expandabletextview.ExpandableTextView
+                    android:id="@+id/expand_text_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:background="@android:color/transparent"
-                    android:padding="16dp"
-                    app:tint="?attr/colorControlNormal" />
-            </com.ms.square.android.expandabletextview.ExpandableTextView>
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="18dp"
+                    app:animAlphaStart="1"
+                    app:animDuration="200"
+                    app:maxCollapsedLines="3">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="18dp"
-                android:layout_marginBottom="4dp"
-                android:orientation="horizontal">
+                    <TextView
+                        android:id="@id/expandable_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/About_desc"
+                        android:textColor="@color/hint"
+                        android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tvChapterList"
-                    android:layout_width="wrap_content"
+                    <ImageButton
+                        android:id="@id/expand_collapse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|bottom"
+                        android:background="@android:color/transparent"
+                        android:padding="16dp"
+                        app:tint="?attr/colorControlNormal" />
+                </com.ms.square.android.expandabletextview.ExpandableTextView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/chapter_list"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnLangFilter"
-                    style="@style/Widget.AppCompat.TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/button_primary_shape"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:text="@string/Language_filter_btn"
-                    android:textColor="@color/white" />
+                    <TextView
+                        android:id="@+id/tvChapterList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/chapter_list"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnLangFilter"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/button_primary_shape"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:text="@string/Language_filter_btn"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/listMangaChapter"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginEnd="18dp" />
+
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-            <ListView
-                android:id="@+id/listMangaChapter"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp" />
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        <Button
+            android:id="@+id/btnResume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Resume"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/button_primary_shape"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
 
 </LinearLayout>
