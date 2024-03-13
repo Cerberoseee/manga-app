@@ -1,1 +1,2 @@
-# Currently a Mangadex Client, will update more
+# Currently a Mangadex Client, will update more (probably)
+
